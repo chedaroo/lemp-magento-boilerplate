@@ -2,9 +2,9 @@
 
 # Set up default Git configuration for "The Installer"
 git config --global jbh-installer.license "proprietary"
-git config --global jbh-installer.company-name "SGH informationstechnologie UG mbH"
-git config --global jbh-installer.company-name-short "SGH"               
-git config --global jbh-installer.company-url "http://www.sgh-it.eu/"    
+git config --global jbh-installer.company-name "EMS Internet"
+git config --global jbh-installer.company-name-short "EMS"
+git config --global jbh-installer.company-url "http://www.ems-internet.co.uk/"
 
 # Directories
 cd ~
@@ -12,13 +12,16 @@ mkdir www
 
 #Install dependencies from composer.
 # Extensions from Composer will be deployed after Magento has been installed
-cd /vagrant
-composer install --dev --prefer-dist --no-interaction --no-scripts
+# cd /vagrant
+# sudo composer install --dev --prefer-dist --no-interaction --no-scripts
 cd ~
 
 # link project modman packages (src/modman imports others)
 modman link ./src
 modman deploy src --force
+
+# link n98-magerun Config overides
+sudo ln -fs /vagrant/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 
 # Use n98-magerun to set up Magento (database and local.xml)
 # CHANGE BASE URL AND MAGENTO VERSION HERE:
@@ -33,10 +36,10 @@ modman deploy-all --force
 n98-magerun sys:setup:run
 
 # Set up PHPUnit
-cd www/shell
-mysqladmin -uroot create magento_unit_tests
-php ecomdev-phpunit.php -a install
-php ecomdev-phpunit.php -a magento-config --db-name magento_unit_tests --base-url http://magento.local/
+# cd www/shell
+# mysqladmin -uroot create magento_unit_tests
+# php ecomdev-phpunit.php -a install
+# php ecomdev-phpunit.php -a magento-config --db-name magento_unit_tests --base-url http://magento.local/
 
 # Link local.xml from /etc, this overwrites the generated local.xml
 # from the install script. If it does not exist, the generated file gets copied to /etc first
@@ -44,12 +47,12 @@ php ecomdev-phpunit.php -a magento-config --db-name magento_unit_tests --base-ur
 if [ ! -f "/vagrant/etc/local.xml" ]; then
 	cp ~/www/app/etc/local.xml /vagrant/etc/local.xml
 fi
-if [ ! -f "/vagrant/etc/local.xml.phpunit" ]; then
-	cp ~/www/app/etc/local.xml.phpunit /vagrant/etc/local.xml.phpunit
-fi
+# if [ ! -f "/vagrant/etc/local.xml.phpunit" ]; then
+# 	cp ~/www/app/etc/local.xml.phpunit /vagrant/etc/local.xml.phpunit
+# fi
 ln -fs /vagrant/etc/local.xml ~/www/app/etc/local.xml
-ln -fs /vagrant/etc/local.xml.phpunit ~/www/app/etc/local.xml.phpunit
+# ln -fs /vagrant/etc/local.xml.phpunit ~/www/app/etc/local.xml.phpunit
 
 # Some devbox specific Magento settings
-n98-magerun admin:user:create fschmengler fschmengler@sgh-it.eu test123 Fabian Schmengler
+n98-magerun admin:user:create rich rich@ems-internet.co.uk @emsinternet1 Richard Jesudason
 n98-magerun config:set dev/log/active 1

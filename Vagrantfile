@@ -36,4 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "./vendor", "/home/vagrant/vendor", type: "rsync",
     rsync__exclude: [".git/"],
 	rsync_args: ["--verbose", "--archive", "--delete", "-z", "--copy-links", "--omit-dir-times"]
+
+  # Update location of rsync on host (cygwin rsync and openshh must be installed on host for this to work)
+  ENV["VAGRANT_DETECTED_OS"] = ENV["VAGRANT_DETECTED_OS"].to_s + " cygwin"
 end

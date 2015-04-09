@@ -20,28 +20,28 @@ apt-get -q -y install mysql-server
 apt-get install -y apache2 libnss-mdns curl git libssl0.9.8 sendmail language-pack-de-base
 apt-get install -y php5-dev libapache2-mod-php5 php5-cli php5-curl php5-mcrypt php5-gd php5-mysql php-pear php5-tidy
 
-# Zend Debug
-chmod +x /vagrant/bin/vagrant-zenddebugger.sh
-/vagrant/bin/vagrant-zenddebugger.sh
-cp /vagrant/conf/php/zend_debugger.ini /etc/php5/mods-available/
-php5enmod zend_debugger/30
+# # Zend Debug
+# chmod +x /vagrant/bin/vagrant-zenddebugger.sh
+# /vagrant/bin/vagrant-zenddebugger.sh
+# cp /vagrant/conf/php/zend_debugger.ini /etc/php5/mods-available/
+# php5enmod zend_debugger/30
 
-# Install Ruby 2.2 via RVM
-command curl -sSL https://rvm.io/mpapis.asc | sudo gpg --import -
-#gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-curl -s -L get.rvm.io | bash -s stable
-source /usr/local/rvm/scripts/rvm
-rvm requirements
-rvm install 2.2.0
-rvm --default use 2.2.0
+# # Install Ruby 2.2 via RVM
+# command curl -sSL https://rvm.io/mpapis.asc | sudo gpg --import -
+# #gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+# curl -s -L get.rvm.io | bash -s stable
+# source /usr/local/rvm/scripts/rvm
+# rvm requirements
+# rvm install 2.2.0
+# rvm --default use 2.2.0
 
-# Mailcatcher to test emails (needs latest Ruby)
-#apt-get install -y libsqlite3-dev
-gem install mailcatcher
-# start mailcatcher if not already running on port 1025
-# allow all ips, see https://github.com/sj26/mailcatcher/issues/89
-nc -z -w5 localhost 1025 || mailcatcher --ip=0.0.0.0
-cp /vagrant/conf/php/mailcatcher.ini /etc/php5/apache2/conf.d/
+# # Mailcatcher to test emails (needs latest Ruby)
+# #apt-get install -y libsqlite3-dev
+# gem install mailcatcher
+# # start mailcatcher if not already running on port 1025
+# # allow all ips, see https://github.com/sj26/mailcatcher/issues/89
+# nc -z -w5 localhost 1025 || mailcatcher --ip=0.0.0.0
+# cp /vagrant/conf/php/mailcatcher.ini /etc/php5/apache2/conf.d/
 
 #Set up Git interface: use colors, add "git tree" command
 git config --global color.ui true
@@ -68,8 +68,8 @@ chmod -R 0777 /home/vagrant/www/var /home/vagrant/www/app/etc /home/vagrant/www/
 usermod -a -G vagrant www-data
 usermod -a -G www-data vagrant
 
-# zend debug dummy file
-cp /vagrant/conf/php/dummy.php /home/vagrant/www/
+# # zend debug dummy file
+# cp /vagrant/conf/php/dummy.php /home/vagrant/www/
 
 # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
 cp -f /vagrant/conf/my.cnf /etc/mysql/my.cnf
