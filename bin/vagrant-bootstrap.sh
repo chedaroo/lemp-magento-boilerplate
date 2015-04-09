@@ -9,16 +9,25 @@ cp -r /vagrant/.ssh/* /home/vagrant/.ssh/
 chmod 0600 /home/vagrant/.ssh/*
 chown vagrant:vagrant /home/vagrant/.ssh/*
 
-# PHP 5.5 from PPA
-apt-get update
-apt-get install -y python-software-properties
-add-apt-repository -y ppa:ondrej/php5
-apt-get update
+# Install Nginx and PHP
+apt-get update > /dev/null
+apt-get install -y nginx php5-fpm > /dev/null
 
+rm -rf /etc/nginx/nginx.conf
+ln -fs /vagrant/conf/nginx.conf /etc/nginx/nginx.conf
+
+# Install MySQL
+apt-get -q -y install mysql-server mysql-client  > /dev/null
 # Required packages
-apt-get -q -y install mysql-server
-apt-get install -y apache2 libnss-mdns curl git libssl0.9.8 sendmail language-pack-de-base
-apt-get install -y php5-dev libapache2-mod-php5 php5-cli php5-curl php5-mcrypt php5-gd php5-mysql php-pear php5-tidy
+apt-get install -y vim git curl > /dev/null
+apt-get install -y php5-dev php5-cli php5-mysql php5-mcrypt php5-gd php5-curl php5-tidy php-pear php-apc  > /dev/nul
+
+# Enable mcrypt
+php5enmod mcrypt
+
+# Restart Nginx and PHP
+service nginx restart
+service php5-fpm restart
 
 # # Zend Debug
 # chmod +x /vagrant/bin/vagrant-zenddebugger.sh
@@ -78,12 +87,12 @@ service mysql restart
 mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 
 # Set locale
-ln -fs /vagrant/conf/locale /etc/default/locale
+# ln -fs /vagrant/conf/locale /etc/default/locale
 
 # Publish; Note that document root /home/vagrant/www is on the native virtual filesystem, the linked modules will be in an rsync'ed shared folder (one direction: host=>guest)
-ln -fs /vagrant/conf/vhost.conf /etc/apache2/sites-available/vhost.conf
-a2dissite 000-default
-a2ensite vhost.conf
-a2enmod proxy
-a2enmod rewrite
-service apache2 reload
+rm -rf /etc/nginx/sites-enabled
+ln -fs /vagrant/conf/sites-enabled /etc/nginx/sites-enabled
+
+# Restart Nginx and PHP
+service nginx restart
+service php5-fpm restart
