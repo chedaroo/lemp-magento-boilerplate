@@ -1,19 +1,13 @@
 #!/bin/sh
 
-# Set up default Git configuration for "The Installer"
-git config --global jbh-installer.license "proprietary"
-git config --global jbh-installer.company-name "EMS Internet"
-git config --global jbh-installer.company-name-short "EMS"
-git config --global jbh-installer.company-url "http://www.ems-internet.co.uk/"
-
 # Directories
 cd ~
 mkdir www
 
 #Install dependencies from composer.
 # Extensions from Composer will be deployed after Magento has been installed
-# cd /vagrant
-# sudo composer install --dev --prefer-dist --no-interaction --no-scripts
+cd /vagrant
+sudo composer install --prefer-dist --no-interaction --no-scripts
 cd ~
 
 # link project modman packages (src/modman imports others)
@@ -34,6 +28,7 @@ chmod -R 0770 /home/vagrant/www/media
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
 modman deploy-all --force
 n98-magerun sys:setup:run
+n98-magerun dev:symlinks --on --global
 
 # Set up PHPUnit
 # cd www/shell

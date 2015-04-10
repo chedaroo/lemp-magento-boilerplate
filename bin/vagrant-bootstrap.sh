@@ -10,6 +10,7 @@ chmod 0600 /home/vagrant/.ssh/*
 chown vagrant:vagrant /home/vagrant/.ssh/*
 
 # Install Nginx and PHP
+echo -e "\x1b[92m\x1b[1mInstall Nginx and PHP...\x1b[0m"
 apt-get update > /dev/null
 apt-get install -y nginx php5-fpm > /dev/null
 

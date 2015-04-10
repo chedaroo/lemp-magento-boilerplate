@@ -6,20 +6,11 @@
     },
     "require": {
         "php": ">=5.3.0",
-		    "riconeitzel/german-localepack-de-de": "dev-preview",
 		    "firegento/magesetup": "dev-master",
-		    "aoepeople/composer-installers": "dev-master",
-		    "avstudnitz/scopehint": "dev-master",
-		    "avstudnitz/admin-notification-advanced": "dev-master",
-		    "tim-reynolds/magento-qconfig": "dev-master"
-    },
-    "require-dev": {
- 		    "aoepeople/aoe_profiler": "dev-master",
-		    "aoepeople/aoe_templatehints": "dev-master",
-		    "aoepeople/envsettingstool": "~1.0",
-        "sse/formfiller": "dev-master",
-		    "jacquesbh/installer": "dev-master",
-		    "ecomdev/ecomdev_phpunit": "*"
+
+		    "tim-reynolds/magento-qconfig": "dev-master",
+            "aoepeople/composer-installers": "dev-master",
+            "waterlee/boilerplate": "dev-master"
     },
     "autoload": {
         "psr-0": {
@@ -39,16 +30,8 @@
             "url": "http://packages.firegento.com"
 		},
 		{
-			"type": "vcs",
-			"url": "https://github.com/aoepeople/EnvSettingsTool"
-		},
-        {
-            "type": "git",
-            "url": "https://github.com/schmengler/FormFiller.git"
-        },
-		{
 			"type": "git",
-			"url": "https://github.com/schmengler/installer.git"
+			"url": "https://github.com/zeljkoprsa/waterlee-boilerplate.git"
 		}
 	],
     "extra":{
