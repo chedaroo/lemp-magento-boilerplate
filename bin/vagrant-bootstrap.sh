@@ -69,6 +69,9 @@ chmod +x /usr/local/bin/modman
 curl -s -o /usr/local/bin/n98-magerun https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar
 chmod +x /usr/local/bin/n98-magerun
 
+# NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
+curl https://raw.githubusercontent.com/creationix/nvm/v0.16.1/install.sh | sh
+
 # Magento installation script, installs project in /home/vagrant
 # /home/vagrant/src already exists due to rsync shared folder
 chown -R vagrant:vagrant /home/vagrant
