@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if [ ! -d "/vagrant/.modman/src" ]; then
   # Copy skin files to ems-starter
   cd /vagrant
