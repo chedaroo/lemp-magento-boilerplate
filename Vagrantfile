@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #config.vm.provision "shell", inline: "nc -z -w5 localhost 1025 || mailcatcher --ip=0.0.0.0", run: "always"
 
   config.vm.synced_folder "./src", "/home/vagrant/src", type: "rsync",
-    rsync__exclude: [".git/", ".settings/"],
+    rsync__exclude: [".git/", ".settings/", "node_modules/", "bower_components/", "themes/*/skin/css/", "themes/*/skin/js/"],
 	rsync_args: ["--verbose", "--archive", "--delete", "-z", "--copy-links", "--omit-dir-times"]
   config.vm.synced_folder "./.modman", "/home/vagrant/.modman", type: "rsync",
     rsync__exclude: [".git/", "/src"],
