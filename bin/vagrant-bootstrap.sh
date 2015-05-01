@@ -91,7 +91,7 @@ service mysql restart
 mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 
 # Set locale
-# ln -fs /vagrant/conf/locale /etc/default/locale
+ln -fs /vagrant/conf/locale /etc/default/locale
 
 # Publish; Note that document root /home/vagrant/www is on the native virtual filesystem, the linked modules will be in an rsync'ed shared folder (one direction: host=>guest)
 rm -rf /etc/nginx/sites-enabled
