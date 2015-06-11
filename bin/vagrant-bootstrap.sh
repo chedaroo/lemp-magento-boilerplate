@@ -5,9 +5,9 @@ export DEBIAN_FRONTEND=noninteractive
 chmod 0777 /tmp
 
 # copy ssh key
-cp -r /vagrant/.ssh/* /home/vagrant/.ssh/
-chmod 0600 /home/vagrant/.ssh/*
-chown vagrant:vagrant /home/vagrant/.ssh/*
+# cp -r /vagrant/.ssh/* /home/vagrant/.ssh/
+# chmod 0600 /home/vagrant/.ssh/*
+# chown vagrant:vagrant /home/vagrant/.ssh/*
 
 # Install Nginx and PHP
 echo -e "\x1b[92m\x1b[1mInstall Nginx and PHP...\x1b[0m"
