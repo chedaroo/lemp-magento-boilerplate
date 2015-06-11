@@ -4,11 +4,6 @@ export DEBIAN_FRONTEND=noninteractive
 # /tmp has to be world-writable, but sometimes isn't by default.
 chmod 0777 /tmp
 
-# copy ssh key
-# cp -r /vagrant/.ssh/* /home/vagrant/.ssh/
-# chmod 0600 /home/vagrant/.ssh/*
-# chown vagrant:vagrant /home/vagrant/.ssh/*
-
 # Update package list
 echo -e "\x1b[92m\x1b[1mUpdating package list...\x1b[0m"
 apt-get update > /dev/null
@@ -70,28 +65,22 @@ if [ ! -d "/home/vagrant/.nvm" ]; then
   su -l vagrant -c "nvm alias default stable"
 fi
 
-# # Magento installation script, installs project in /home/vagrant
-# # /home/vagrant/src already exists due to rsync shared folder
-# chown -R vagrant:vagrant /home/vagrant
-# sudo -u vagrant -H sh -c "sh /vagrant/bin/vagrant-magento.sh"
-# # make Magento directories writable as needed and add www-data user to vagrant group
-# chmod -R 0777 /home/vagrant/www/var /home/vagrant/www/app/etc /home/vagrant/www/media
-# usermod -a -G vagrant www-data
-# usermod -a -G www-data vagrant
+# Magento installation script, installs project in /home/vagrant
+# /home/vagrant/src already exists due to rsync shared folder
+chown -R vagrant:vagrant /home/vagrant
+sudo -u vagrant -H sh -c "sh /vagrant/bin/vagrant-magento.sh"
+# make Magento directories writable as needed and add www-data user to vagrant group
+chmod -R 0777 /home/vagrant/www/var /home/vagrant/www/app/etc /home/vagrant/www/media
+usermod -a -G vagrant www-data
+usermod -a -G www-data vagrant
 
-# # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
-# cp -f /vagrant/conf/my.cnf /etc/mysql/my.cnf
-# service mysql restart
-# # Allow access from host
-# mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
-
-# # Set locale
-# ln -fs /vagrant/conf/locale /etc/default/locale
+# MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
+cp -f /vagrant/conf/my.cnf /etc/mysql/my.cnf
+service mysql restart
+# Allow access from host
+mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 
 # # Publish; Note that document root /home/vagrant/www is on the native virtual filesystem, the linked modules will be in an rsync'ed shared folder (one direction: host=>guest)
-# rm -rf /etc/nginx/sites-enabled
-# ln -fs /vagrant/conf/sites-enabled /etc/nginx/sites-enabled
+ln -fs /vagrant/conf/sites-enabled/* /etc/nginx/sites-enabled
 
-# # Restart Nginx and PHP
-# service nginx restart
-# service php5-fpm restart
+

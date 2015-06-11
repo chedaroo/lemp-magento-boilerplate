@@ -33,6 +33,7 @@ sudo ln -fs /vagrant/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 n98-magerun install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
 
 # Write permissions in media
+mkdir /home/vagrant/www/media/wysiwyg
 chmod -R 0770 /home/vagrant/www/media
 
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
