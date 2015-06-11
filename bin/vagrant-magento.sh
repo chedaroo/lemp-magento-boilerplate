@@ -10,7 +10,6 @@ SAMPLE_DATA="no"
 # Magento Version
 $MAGENTO_VERSION="magento-ce-1.9.1.0"
 
-
 # Directories
 cd ~
 mkdir www
@@ -41,23 +40,14 @@ modman deploy-all --force
 n98-magerun sys:setup:run
 n98-magerun dev:symlinks --on --global
 
-# Set up PHPUnit
-# cd www/shell
-# mysqladmin -uroot create magento_unit_tests
-# php ecomdev-phpunit.php -a install
-# php ecomdev-phpunit.php -a magento-config --db-name magento_unit_tests --base-url http://magento.local/
-
 # Link local.xml from /etc, this overwrites the generated local.xml
 # from the install script. If it does not exist, the generated file gets copied to /etc first
 # This way you can put the devbox local.xml under version control
 if [ ! -f "/vagrant/etc/local.xml" ]; then
 	cp ~/www/app/etc/local.xml /vagrant/etc/local.xml
 fi
-# if [ ! -f "/vagrant/etc/local.xml.phpunit" ]; then
-# 	cp ~/www/app/etc/local.xml.phpunit /vagrant/etc/local.xml.phpunit
-# fi
+
 ln -fs /vagrant/etc/local.xml ~/www/app/etc/local.xml
-# ln -fs /vagrant/etc/local.xml.phpunit ~/www/app/etc/local.xml.phpunit
 
 # Some devbox specific Magento settings
 n98-magerun config:set dev/log/active 1
