@@ -7,9 +7,6 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  # CHANGE THIS:
-  config.vm.hostname = "magento.local"
-
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   #
