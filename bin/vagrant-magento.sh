@@ -12,7 +12,9 @@ MAGENTO_VERSION="magento-ce-1.9.1.0"
 
 # Directories
 cd ~
-mkdir www
+if [ ! -d "www" ]; then
+  mkdir www
+fi
 
 # Install dependencies from composer.
 # Extensions from Composer will be deployed after Magento has been installed
@@ -28,9 +30,10 @@ modman deploy src --force
 sudo ln -fs /vagrant/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 
 # Use n98-magerun to set up Magento (database and local.xml)
-# CHANGE BASE URL AND MAGENTO VERSION HERE:
-# use --noDownload if Magento core is deployed with modman or composer. Remove the line if there already is a configured Magento installation
+# use --noDownload if Magento core is deployed with modman or composer. Test if there already is a configured Magento installation and if so skip installation
+if [ ! -e "~/www/app/etc/local.xml" ]; then
 n98-magerun install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
+fi
 
 # Write permissions in media
 chmod -R 0770 /home/vagrant/www/media

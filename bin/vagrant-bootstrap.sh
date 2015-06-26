@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 export DEBIAN_FRONTEND=noninteractive
 
+PROJECT_ROOT="/vagrant"
+USERNAME="vagrant"
+GROUP="vagrant"
+RSYNC_TARGET="/home/$USERNAME"
+
 # /tmp has to be world-writable, but sometimes isn't by default.
 chmod 0777 /tmp
 
@@ -8,22 +13,10 @@ chmod 0777 /tmp
 echo -e "\x1b[92m\x1b[1mUpdating package list...\x1b[0m"
 apt-get update > /dev/null
 
-# Install Nginx and PHP
-echo -e "\x1b[92m\x1b[1mInstalling Nginx and PHP...\x1b[0m"
-apt-get install -y nginx php5-fpm #> /dev/null
+# Install required Ubuntu Packages
+source "$PROJECT_ROOT/bin/inc/common-install-packages.sh"
 
-# Link modified Nginx conf
-echo -e "\x1b[92m\x1b[1mLinking modified Nginx conf...\x1b[0m"
-rm -rf /etc/nginx/nginx.conf
-ln -fs /vagrant/conf/nginx.conf /etc/nginx/nginx.conf
-
-# Install MySQL
-apt-get -q -y install mysql-server mysql-client  #> /dev/null
-# Required packages
-apt-get install -y vim git curl #> /dev/null
-apt-get install -y php5-dev php5-cli php5-mysql php5-mcrypt php5-gd php5-curl php5-tidy php-pear php-apc  #> /dev/nul
-
-# Enable mcrypt
+# Enable mcrypt - required by Magento
 php5enmod mcrypt
 
 # Restart Nginx and PHP
@@ -34,6 +27,8 @@ service php5-fpm restart
 git config --global color.ui true
 git config --global alias.tree "log --oneline --decorate --all --graph"
 
+# Install script tools
+#
 # Composer
 if [ ! -f "/usr/local/bin/composer" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling Composer...\x1b[0m"
@@ -56,31 +51,32 @@ if [ ! -f "/usr/local/bin/n98-magerun" ]; then
 fi
 
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
-if [ ! -d "/home/vagrant/.nvm" ]; then
+if [ ! -d "$RSYNC_TARGET/.nvm" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling NVM for vagrant user...\x1b[0m"
-  su -l vagrant -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | PROFILE=~/.profile bash"
+  su -l $USERNAME -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | PROFILE=~/.profile bash"
   # Install latest stable version of Node.js and make default
   echo -e "\x1b[92m\x1b[1mInstalling latest stable version of Node.js...\x1b[0m"
-  su -l vagrant -c "nvm install stable"
-  su -l vagrant -c "nvm alias default stable"
+  su -l $USERNAME -c "nvm install stable"
+  su -l $USERNAME -c "nvm alias default stable"
 fi
 
-# Magento installation script, installs project in /home/vagrant
-# /home/vagrant/src already exists due to rsync shared folder
-chown -R vagrant:vagrant /home/vagrant
-sudo -u vagrant -H sh -c "sh /vagrant/bin/vagrant-magento.sh"
+# Magento installation script, installs project in $RSYNC_TARGET
+# $RSYNC_TARGET/src already exists due to rsync shared folder
+chown -R $USERNAME:$GROUP $RSYNC_TARGET
+sudo -u $USERNAME -H sh -c "sh $PROJECT_ROOT/bin/vagrant-magento.sh"
 # make Magento directories writable as needed and add www-data user to vagrant group
-chmod -R 0777 /home/vagrant/www/var /home/vagrant/www/app/etc /home/vagrant/www/media
+chmod -R 0777 $RSYNC_TARGET/www/var $RSYNC_TARGET/www/app/etc $RSYNC_TARGET/www/media
 usermod -a -G vagrant www-data
 usermod -a -G www-data vagrant
 
 # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
-cp -f /vagrant/conf/my.cnf /etc/mysql/my.cnf
+cp -f $PROJECT_ROOT/conf/my.cnf /etc/mysql/my.cnf
 service mysql restart
 # Allow access from host
 mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 
-# # Publish; Note that document root /home/vagrant/www is on the native virtual filesystem, the linked modules will be in an rsync'ed shared folder (one direction: host=>guest)
-ln -fs /vagrant/conf/sites-enabled/* /etc/nginx/sites-enabled
-
-
+# # Publish; Note that document root $RSYNC_TARGET/www is on the native virtual filesystem, the linked modules will be in an rsync'ed shared folder (one direction: host=>guest)
+if [ -e "/etc/nginx/sites-enabled/default" ]; then
+  sudo rm /etc/nginx/sites-enabled/default
+fi
+ln -fs $PROJECT_ROOT/conf/sites-enabled/* /etc/nginx/sites-enabled

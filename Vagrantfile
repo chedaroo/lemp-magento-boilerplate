@@ -24,9 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision :shell, :path => "bin/vagrant-bootstrap.sh"
-  # config.vm.provision :shell, :path => "bin/create-waterlee-starter-theme.sh"
   config.vm.provision "shell", inline: "sudo service nginx restart", run: "always"
-  #config.vm.provision "shell", inline: "nc -z -w5 localhost 1025 || mailcatcher --ip=0.0.0.0", run: "always"
 
   config.vm.synced_folder "./src", "/home/vagrant/src", type: "rsync",
     rsync__exclude: [".git/", ".settings/", "node_modules/", "bower_components/", "themes/*/skin/css/", "themes/*/skin/js/"],
