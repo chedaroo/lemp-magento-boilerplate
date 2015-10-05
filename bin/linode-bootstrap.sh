@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 export DEBIAN_FRONTEND=noninteractive
 
-PROJECT_ROOT="/vagrant"
-USERNAME="vagrant"
-GROUP="vagrant"
-RSYNC_TARGET="/home/$USERNAME"
+echo "Project Root"
+read PROJECT_ROOT
+USERNAME="beanstalk"
+GROUP="www-data"
 
 # /tmp has to be world-writable, but sometimes isn't by default.
 chmod 0777 /tmp
@@ -15,6 +15,15 @@ apt-get update > /dev/null
 
 # Install required Ubuntu Packages
 source "$PROJECT_ROOT/bin/inc/common-install-packages.sh"
+
+# Secure MySQL
+if [ ! -e ~/MYSQL-SECURE.flag ]; then
+  source "$PROJECT_ROOT/bin/inc/linode-mysql.sh"
+  touch ~/MYSQL-SECURE.flag
+else
+  echo "Please enter the current root MySQL password"
+  read MYSQL_ROOT_PASSWORD
+fi
 
 # Enable mcrypt - required by Magento
 php5enmod mcrypt
@@ -52,7 +61,7 @@ if [ ! -f "/usr/local/bin/n98-magerun" ]; then
 fi
 
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
-if [ ! -d "$RSYNC_TARGET/.nvm" ]; then
+if [ ! -d "/home/beanstalk/.nvm" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling NVM for vagrant user...\x1b[0m"
   su -l $USERNAME -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | PROFILE=~/.profile bash"
   # Install latest stable version of Node.js and make default
@@ -63,7 +72,6 @@ fi
 
 # Redis Cleanup tool and Cron tab
 if [ ! -d "$PROJECT_ROOT/var/cm_redis_tools" ]; then
-  su
   # Clone tool repo and update
   cd $PROJECT_ROOT/var/
   git clone https://github.com/samm-git/cm_redis_tools.git
@@ -79,23 +87,23 @@ if [ ! -d "$PROJECT_ROOT/var/cm_redis_tools" ]; then
   cd ~
 fi
 
-# Magento installation script, installs project in $RSYNC_TARGET
-# $RSYNC_TARGET/src already exists due to rsync shared folder
-chown -R $USERNAME:$GROUP $RSYNC_TARGET
-sudo -u $USERNAME -H sh -c "sh $PROJECT_ROOT/bin/vagrant-magento.sh"
-# make Magento directories writable as needed and add www-data user to vagrant group
-chmod -R 0777 $RSYNC_TARGET/www/var $RSYNC_TARGET/www/app/etc $RSYNC_TARGET/www/media
-usermod -a -G vagrant www-data
-usermod -a -G www-data vagrant
+# Magento installation script
+sudo -u $USERNAME -H PROJECT_ROOT=$PROJECT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh -c "sh $PROJECT_ROOT/bin/linode-magento.sh"
 
 # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
 cp -f $PROJECT_ROOT/conf/my.cnf /etc/mysql/my.cnf
 service mysql restart
 # Allow access from host
-mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
+mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 
-# # Publish; Note that document root $RSYNC_TARGET/www is on the native virtual filesystem, the linked modules will be in an rsync'ed shared folder (one direction: host=>guest)
+# Remove default Nginx website conf file
 if [ -e "/etc/nginx/sites-enabled/default" ]; then
   sudo rm /etc/nginx/sites-enabled/default
 fi
-ln -fs $PROJECT_ROOT/conf/sites-enabled/magento.local /etc/nginx/sites-enabled/magento.local
+# Symlink all Nginx website conf files
+ln -fs $PROJECT_ROOT/conf/sites-enabled/* /etc/nginx/sites-enabled/
+# Remove link for local Vagrant dev env Nginx conf file
+rm /etc/nginx/sites-enabled/magento.local
+
+# Restart Nginx
+service nginx restart
