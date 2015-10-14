@@ -4,8 +4,83 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "79ee17fc8d965545f7994c45c08d206a",
+    "hash": "4e830b43643bfb15ac786a6e6c90db4d",
+    "content-hash": "9a542415e87b642cc0942ebe754c60e5",
     "packages": [
+        {
+            "name": "aoepeople/aoe_profiler",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AOEpeople/Aoe_Profiler.git",
+                "reference": "2903fb113620bb038964df5d51691387456efeac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AOEpeople/Aoe_Profiler/zipball/2903fb113620bb038964df5d51691387456efeac",
+                "reference": "2903fb113620bb038964df5d51691387456efeac",
+                "shasum": ""
+            },
+            "require": {
+                "magento-hackathon/magento-composer-installer": "*"
+            },
+            "type": "magento-module",
+            "license": [
+                "GPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Fabrizio Branca",
+                    "email": "fabrizio.branca@aoe.com"
+                }
+            ],
+            "description": "Magento Profiler",
+            "homepage": "http://www.fabrizio-branca.de/magento-profiler.html",
+            "support": {
+                "source": "https://github.com/AOEpeople/Aoe_Profiler/tree/master",
+                "issues": "https://github.com/AOEpeople/Aoe_Profiler/issues"
+            },
+            "time": "2015-09-28 22:37:12"
+        },
+        {
+            "name": "aoepeople/aoe_templatehints",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AOEpeople/Aoe_TemplateHints.git",
+                "reference": "17a3b703dbcebe40077a26de44e9c501d1031158"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AOEpeople/Aoe_TemplateHints/zipball/17a3b703dbcebe40077a26de44e9c501d1031158",
+                "reference": "17a3b703dbcebe40077a26de44e9c501d1031158",
+                "shasum": ""
+            },
+            "require": {
+                "magento-hackathon/magento-composer-installer": "*"
+            },
+            "replace": {
+                "aoemedia/aoe_templatehints": "*",
+                "fbrnc/aoe_templatehints": "*"
+            },
+            "type": "magento-module",
+            "license": [
+                "GPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Fabrizio Branca",
+                    "email": "{firtname}.{lastname}@aoe.com"
+                }
+            ],
+            "description": "Advanced Template Hints for Magento",
+            "homepage": "http://www.fabrizio-branca.de/magento-advanced-template-hints-20.html",
+            "support": {
+                "source": "https://github.com/AOEpeople/Aoe_TemplateHints/tree/master",
+                "issues": "https://github.com/AOEpeople/Aoe_TemplateHints/issues"
+            },
+            "time": "2015-06-26 15:48:04"
+        },
         {
             "name": "aoepeople/composer-installers",
             "version": "dev-master",
@@ -56,12 +131,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/firegento/firegento-magesetup.git",
-                "reference": "901df62be3763fb0f8370c56828eb3b6d914cd7f"
+                "reference": "dc25d84b508537c71b399a821978d6859f355d0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firegento/firegento-magesetup/zipball/901df62be3763fb0f8370c56828eb3b6d914cd7f",
-                "reference": "901df62be3763fb0f8370c56828eb3b6d914cd7f",
+                "url": "https://api.github.com/repos/firegento/firegento-magesetup/zipball/dc25d84b508537c71b399a821978d6859f355d0e",
+                "reference": "dc25d84b508537c71b399a821978d6859f355d0e",
                 "shasum": ""
             },
             "require": {
@@ -218,10 +293,49 @@
             "description": "See the full list of features including several screenshots at https://github.com/firegento/firegento-magesetup/blob/development/docs/features/features.markdown. Central features of MageSetup are: Setting of important configuration settings per Country; Predefined tax settings and tax classes for shipping from several countries to worldwide destinations; Assign new tax classes to all products (configurable); Creation of email templates based on the local language pack (Legal texts can be added to some templates automatically); Creation and Activation of Checkout Agreements (Agreements can be shown at customer registration instead of or additional to the checkout. They can be required or not); Creation of default CMS pages like imprint, terms and conditions, privacy, shipping, payment methods; Create email templates, cms pages and blocks as well as checkout agreements for store views with a different language as well; Possibility to add tax and/or shipping info to all prices; Automatical generation of meta data to products; Saving of every status change of newsletter subscriptions; Presets are configurable via xml files for every country seperately; Many more.",
             "homepage": "https://github.com/firegento/firegento-magesetup",
             "support": {
-                "source": "https://github.com/firegento/firegento-magesetup/tree/2.2.2",
+                "source": "https://github.com/firegento/firegento-magesetup/tree/2.2.3",
                 "issues": "https://github.com/firegento/firegento-magesetup/issues"
             },
-            "time": "2015-02-20 07:31:11"
+            "time": "2015-07-23 07:55:02"
+        },
+        {
+            "name": "obukhow/adaptive-resize",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/obukhow/AdaptiveResize.git",
+                "reference": "f4f321e6cb02f695705e7387660698f59b1747fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/obukhow/AdaptiveResize/zipball/f4f321e6cb02f695705e7387660698f59b1747fc",
+                "reference": "f4f321e6cb02f695705e7387660698f59b1747fc",
+                "shasum": ""
+            },
+            "suggest": {
+                "magento-hackathon/magento-composer-installer": "Provides automatic installation of this extension"
+            },
+            "type": "magento-module",
+            "license": [
+                "OSL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Denis Obukhov",
+                    "email": "denis.obukhov@oggettoweb.com"
+                }
+            ],
+            "description": "Adaptive imagesresize with crop for ideal proportions fit Magento plugin",
+            "homepage": "https://github.com/obukhow/AdaptiveResize",
+            "keywords": [
+                "catalog",
+                "image"
+            ],
+            "support": {
+                "source": "https://github.com/obukhow/AdaptiveResize/tree/master",
+                "issues": "https://github.com/obukhow/AdaptiveResize/issues"
+            },
+            "time": "2015-02-16 14:04:21"
         },
         {
             "name": "tim-reynolds/magento-qconfig",
@@ -256,40 +370,18 @@
                 "issues": "https://github.com/tim-reynolds/magento-qconfig/issues"
             },
             "time": "2013-07-31 19:42:16"
-        },
-        {
-            "name": "waterlee/boilerplate",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zeljkoprsa/waterlee-boilerplate.git",
-                "reference": "96dd86a6860eabf11aab39094fdc532f0c7229ae"
-            },
-            "require": {
-                "magento-hackathon/magento-composer-installer": "*"
-            },
-            "type": "magento-module",
-            "license": [
-                "GPL-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "WATERLEE Foundation"
-                }
-            ],
-            "description": "Magento HTML5 Responsive Theme Boilerplate",
-            "homepage": "https://github.com/romfr/waterlee-boilerplate",
-            "time": "2015-01-05 08:29:13"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "firegento/magesetup": 20,
-        "tim-reynolds/magento-qconfig": 20,
+        "aoepeople/aoe_profiler": 20,
+        "aoepeople/aoe_templatehints": 20,
         "aoepeople/composer-installers": 20,
-        "waterlee/boilerplate": 20
+        "firegento/magesetup": 20,
+        "obukhow/adaptive-resize": 20,
+        "tim-reynolds/magento-qconfig": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -6,11 +6,12 @@
     },
     "require": {
         "php": ">=5.3.0",
-		    "firegento/magesetup": "dev-master",
-
-		    "tim-reynolds/magento-qconfig": "dev-master",
+            "aoepeople/aoe_profiler": "dev-master",
+            "aoepeople/aoe_templatehints": "dev-master",
             "aoepeople/composer-installers": "dev-master",
-            "waterlee/boilerplate": "dev-master"
+            "firegento/magesetup": "dev-master",
+            "obukhow/adaptive-resize": "dev-master",
+            "tim-reynolds/magento-qconfig": "dev-master"
     },
     "autoload": {
         "psr-0": {
@@ -29,13 +30,13 @@
             "type": "composer",
             "url": "http://packages.firegento.com"
 		},
-		{
-			"type": "git",
-			"url": "https://github.com/zeljkoprsa/waterlee-boilerplate.git"
-		}
+        {
+            "type": "git",
+            "url": "https://github.com/obukhow/AdaptiveResize.git"
+        }
 	],
     "extra":{
-        "magento-root-dir": "/home/vagrant/www/",
+        "magento-root-dir": "www/",
 		"installer-paths": {
 			"www/" : [ "type:magento-source" ],
 			".modman/{$name}/" : [ "type:magento-module" ]
