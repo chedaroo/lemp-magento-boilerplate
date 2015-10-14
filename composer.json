@@ -9,7 +9,6 @@
             "aoepeople/aoe_profiler": "dev-master",
             "aoepeople/aoe_templatehints": "dev-master",
             "aoepeople/composer-installers": "dev-master",
-            "firegento/magesetup": "dev-master",
             "obukhow/adaptive-resize": "dev-master",
             "tim-reynolds/magento-qconfig": "dev-master"
     },

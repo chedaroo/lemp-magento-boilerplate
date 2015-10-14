@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4e830b43643bfb15ac786a6e6c90db4d",
-    "content-hash": "9a542415e87b642cc0942ebe754c60e5",
+    "hash": "2c8df1a6de8aae4e029778e6a1bb91c1",
+    "content-hash": "0d2acbc2630408b2471e3ed807ad804a",
     "packages": [
         {
             "name": "aoepeople/aoe_profiler",
@@ -126,179 +126,6 @@
             "time": "2014-03-07 20:11:42"
         },
         {
-            "name": "firegento/magesetup",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/firegento/firegento-magesetup.git",
-                "reference": "dc25d84b508537c71b399a821978d6859f355d0e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/firegento/firegento-magesetup/zipball/dc25d84b508537c71b399a821978d6859f355d0e",
-                "reference": "dc25d84b508537c71b399a821978d6859f355d0e",
-                "shasum": ""
-            },
-            "require": {
-                "magento-hackathon/magento-composer-installer": "*"
-            },
-            "require-dev": {
-                "firegento/mage-ci": "master-dev",
-                "phpunit/phpunit": "4.1.*@dev"
-            },
-            "type": "magento-module",
-            "extra": {
-                "magento-root-dir": "test/",
-                "magento_connect": {
-                    "name": "FireGento_MageSetup",
-                    "summary": "MageSetup configures a shop for a national market. It creates configuration and tax settings, email templates, cms blocks and pages.",
-                    "channel": "community",
-                    "php_min": "5.3.0",
-                    "php_max": "7.9.9",
-                    "stability": "stable",
-                    "license_uri": "http://www.gnu.org/licenses/gpl-3.0.html",
-                    "content": [
-                        {
-                            "type": "magecommunity",
-                            "structure": "dir",
-                            "path": "FireGento/MageSetup"
-                        },
-                        {
-                            "type": "mageetc",
-                            "structure": "file",
-                            "path": "modules/FireGento_MageSetup.xml"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "file",
-                            "path": "de_AT/FireGento_MageSetup.csv"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "de_CH/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "file",
-                            "path": "de_DE/FireGento_MageSetup.csv"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "de_DE/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "file",
-                            "path": "en_US/FireGento_MageSetup.csv"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "en_US/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "file",
-                            "path": "ru_RU/FireGento_MageSetup.csv"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "ru_RU/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "pl_PL/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "ro_RO/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "fr_CH/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "file",
-                            "path": "fr_FR/FireGento_MageSetup.csv"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "fr_FR/template/magesetup"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "file",
-                            "path": "it_IT/FireGento_MageSetup.csv"
-                        },
-                        {
-                            "type": "magelocale",
-                            "structure": "dir",
-                            "path": "it_IT/template/magesetup"
-                        },
-                        {
-                            "type": "magedesign",
-                            "structure": "file",
-                            "path": "adminhtml/default/default/layout/magesetup.xml"
-                        },
-                        {
-                            "type": "magedesign",
-                            "structure": "dir",
-                            "path": "adminhtml/default/default/template/magesetup"
-                        },
-                        {
-                            "type": "magedesign",
-                            "structure": "file",
-                            "path": "frontend/base/default/layout/magesetup.xml"
-                        },
-                        {
-                            "type": "magedesign",
-                            "structure": "dir",
-                            "path": "frontend/base/default/template/magesetup"
-                        },
-                        {
-                            "type": "magedesign",
-                            "structure": "dir",
-                            "path": "frontend/rwd/default/template/magesetup"
-                        },
-                        {
-                            "type": "mageskin",
-                            "structure": "dir",
-                            "path": "frontend/base/default/css/magesetup"
-                        },
-                        {
-                            "type": "mageskin",
-                            "structure": "dir",
-                            "path": "frontend/rwd/default/css/magesetup"
-                        }
-                    ]
-                }
-            },
-            "license": [
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Team FireGento",
-                    "email": "team@firegento.com"
-                }
-            ],
-            "description": "See the full list of features including several screenshots at https://github.com/firegento/firegento-magesetup/blob/development/docs/features/features.markdown. Central features of MageSetup are: Setting of important configuration settings per Country; Predefined tax settings and tax classes for shipping from several countries to worldwide destinations; Assign new tax classes to all products (configurable); Creation of email templates based on the local language pack (Legal texts can be added to some templates automatically); Creation and Activation of Checkout Agreements (Agreements can be shown at customer registration instead of or additional to the checkout. They can be required or not); Creation of default CMS pages like imprint, terms and conditions, privacy, shipping, payment methods; Create email templates, cms pages and blocks as well as checkout agreements for store views with a different language as well; Possibility to add tax and/or shipping info to all prices; Automatical generation of meta data to products; Saving of every status change of newsletter subscriptions; Presets are configurable via xml files for every country seperately; Many more.",
-            "homepage": "https://github.com/firegento/firegento-magesetup",
-            "support": {
-                "source": "https://github.com/firegento/firegento-magesetup/tree/2.2.3",
-                "issues": "https://github.com/firegento/firegento-magesetup/issues"
-            },
-            "time": "2015-07-23 07:55:02"
-        },
-        {
             "name": "obukhow/adaptive-resize",
             "version": "dev-master",
             "source": {
@@ -379,7 +206,6 @@
         "aoepeople/aoe_profiler": 20,
         "aoepeople/aoe_templatehints": 20,
         "aoepeople/composer-installers": 20,
-        "firegento/magesetup": 20,
         "obukhow/adaptive-resize": 20,
         "tim-reynolds/magento-qconfig": 20
     },
