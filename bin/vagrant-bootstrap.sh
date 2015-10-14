@@ -10,7 +10,7 @@ RSYNC_TARGET="/home/$USERNAME"
 chmod 0777 /tmp
 
 # Update package list
-echo -e "\x1b[92m\x1b[1mUpdating package list...\x1b[0m"
+echo -e "\x1b[92m\x1b[1mUpdating package list...\x1b[0m\x1b[21m"
 apt-get update > /dev/null
 
 # Install required Ubuntu Packages
@@ -23,46 +23,57 @@ php5enmod mcrypt
 service nginx restart
 service php5-fpm restart
 
-#Set up Git interface: use colors, add "git tree" command
+# Set up Git interface: use colors, add "git tree" command
 git config --global color.ui true
 git config --global alias.tree "log --oneline --decorate --all --graph"
 
+##
 # Install script tools
-#
+##
+
 # Composer
 if [ ! -f "/usr/local/bin/composer" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Composer...\x1b[0m"
+  echo -e "\x1b[92m\x1b[1mInstalling Composer...\x1b[0m\x1b[21m"
   curl -sS https://getcomposer.org/installer | php
   mv composer.phar /usr/local/bin/composer
 fi
 
 # Modman
 if [ ! -f "/usr/local/bin/modman" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Modman...\x1b[0m"
+  echo -e "\x1b[92m\x1b[1mInstalling Modman...\x1b[0m\x1b[21m"
   curl -s -o /usr/local/bin/modman https://raw.githubusercontent.com/colinmollenhour/modman/master/modman
   chmod +x /usr/local/bin/modman
 fi
 
 # n98-magerun
 if [ ! -f "/usr/local/bin/n98-magerun" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling n98-magerun...\x1b[0m"
+  echo -e "\x1b[92m\x1b[1mInstalling n98-magerun...\x1b[0m\x1b[21m"
   curl -s -o /usr/local/bin/n98-magerun https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar
   chmod +x /usr/local/bin/n98-magerun
-  alias magerun="n98-magerun --root-dir=~/www/"
+  # Alias magerun for user
+  su -l $USERNAME -c "echo \"alias magerun='n98-magerun'\" >> ~/.bash_aliases"
 fi
 
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
-if [ ! -d "$RSYNC_TARGET/.nvm" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling NVM for vagrant user...\x1b[0m"
-  su -l $USERNAME -c "curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.25.4/install.sh | PROFILE=~/.profile bash"
+if [ ! -d "/usr/local/nvm" ]; then
+  echo -e "\x1b[92m\x1b[1mInstalling NVM...\x1b[0m\x1b[21m"
+  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | NVM_DIR=/usr/local/nvm bash
+  # Source NVM for all users
+  NVM_DIR="/usr/local/nvm"
+  SOURCE_STR="\n#Load NVM\nexport NVM_DIR=$NVM_DIR\n[ -s $NVM_DIR/nvm.sh ] && . $NVM_DIR/nvm.sh\n[[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion"
+  su -l $USERNAME -c "printf \"$SOURCE_STR\" >> ~/.profile"
+  # Change permission to allow all users to install Node versions
+  chmod 0777 -R /usr/local/nvm
   # Install latest stable version of Node.js and make default
-  echo -e "\x1b[92m\x1b[1mInstalling latest stable version of Node.js...\x1b[0m"
+  echo -e "\x1b[92m\x1b[1mInstalling latest stable version of Node.js...\x1b[0m\x1b[21m"
+  source ~/.bashrc
   su -l $USERNAME -c "nvm install stable"
   su -l $USERNAME -c "nvm alias default stable"
 fi
 
 # Redis Cleanup tool and Cron tab
 if [ ! -d "$PROJECT_ROOT/var/cm_redis_tools" ]; then
+  echo -e "\x1b[92m\x1b[1mInstalling Redis Cleanup tool and adding cron job...\x1b[0m\x1b[21m"
   su
   # Clone tool repo and update
   cd $PROJECT_ROOT/var/
@@ -98,4 +109,4 @@ mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 if [ -e "/etc/nginx/sites-enabled/default" ]; then
   sudo rm /etc/nginx/sites-enabled/default
 fi
-ln -fs $PROJECT_ROOT/conf/sites-enabled/magento.local /etc/nginx/sites-enabled/magento.local
+ln -fs $PROJECT_ROOT/conf/sites-enabled/local-vagrant.conf /etc/nginx/sites-enabled/local-vagrant.conf

@@ -8,7 +8,7 @@ DB_PASS=""
 # Install Sample data (beware, takes a long time)
 SAMPLE_DATA="no"
 # Magento Version
-MAGENTO_VERSION="magento-ce-1.9.1.0"
+MAGENTO_VERSION="magento-ce-1.9.1.1"
 
 # Directories
 cd ~
@@ -53,7 +53,7 @@ if [ ! -f "/vagrant/etc/local.xml" ]; then
 	cp ~/www/app/etc/local.xml /vagrant/etc/local.xml
 fi
 
-ln -fs ~/etc/local.xml ~/www/app/etc/local.xml
+ln -fs /vagrant/etc/local.xml ~/www/app/etc/local.xml
 
 # Some devbox specific Magento settings
 n98-magerun config:set dev/log/active 1
