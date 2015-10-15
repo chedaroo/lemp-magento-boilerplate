@@ -1,0 +1,6 @@
+app/etc/modules/EmsInt_Tinymceoveride.xml app/etc/modules/EmsInt_Tinymceoveride.xml
+app/code/local/EmsInt/Tinymceoveride/etc/config.xml app/code/local/EmsInt/Tinymceoveride/etc/config.xml
+app/design/adminhtml/default/default/layout/emsint_tinymceoveride.xml app/design/adminhtml/default/default/layout/emsint_tinymceoveride.xml
+skin/adminhtml/default/default/emsint_tinymceoveride/wysiwyg/tiny_mce/setup.js skin/adminhtml/default/default/emsint_tinymceoveride/wysiwyg/tiny_mce/setup.js
+
+

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>emsint_tinymceoveride/wysiwyg/tiny_mce/setup.js</name>
+                <params/>
+                <if/>
+                <condition>can_load_tiny_mce</condition>
+            </action>
+        </reference>
+    </default>
+</layout>

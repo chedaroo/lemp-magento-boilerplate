@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <EmsInt_Tinymceoveride>
+            <active>true</active>
+            <codePool>local</codePool>
+        </EmsInt_Tinymceoveride>
+    </modules>
+</config>

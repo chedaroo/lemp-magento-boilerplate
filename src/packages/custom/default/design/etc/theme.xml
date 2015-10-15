@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<theme>
+    <parent>rwd/default</parent>
+    <layout>
+        <updates>
+            <custom_layout>
+                <file>custom_default.xml</file>
+            </custom_layout>
+        </updates>
+    </layout>
+</theme>

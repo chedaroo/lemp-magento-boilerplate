@@ -1,0 +1,21 @@
+{
+  "name": "fletcherstewart",
+  "version": "1.0.0",
+  "authors": [
+    "Rich <rich@ems-internet.co.uk>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "compass-mixins": "https://github.com/Igosuki/compass-mixins.git#~1.0.2"
+  }
+}

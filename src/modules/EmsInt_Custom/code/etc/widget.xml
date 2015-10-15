@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<widgets>
+    <catalog_category_link>
+        <parameters>
+            <template>
+                <values>
+                    <link_button translate="label">
+                        <value>catalog/category/widget/link/link_button.phtml</value>
+                        <label>Category Link Button Template</label>
+                    </link_button>
+                </values>
+            </template>
+        </parameters>
+    </catalog_category_link>
+</widgets>

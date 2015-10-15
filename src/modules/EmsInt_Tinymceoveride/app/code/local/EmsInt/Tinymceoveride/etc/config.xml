@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <EmsInt_Tinymceoveride>
+            <version>0.0.1</version>
+        </EmsInt_Tinymceoveride>
+    </modules>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <emsint_tinymceoveride>
+                    <file>emsint_tinymceoveride.xml</file>
+                </emsint_tinymceoveride>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

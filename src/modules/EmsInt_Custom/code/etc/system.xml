@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <sections>
+    <general>
+      <groups>
+        <store_information translate="label">
+          <fields>
+            <international_telephone translate="label">
+              <label>International Telephone</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>20</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>If present, will be included on contact page</comment>
+            </international_telephone>
+            <fax translate="label">
+              <label>Fax</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>21</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>If present, will be included on contact page</comment>
+            </fax>
+            <international_fax translate="label">
+              <label>International Fax</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>22</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>If present, will be included on contact page</comment>
+            </international_fax>
+            <company_number translate="label">
+              <label>Company Registration Number</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>23</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>If present, will be included on contact page</comment>
+            </company_number>
+          </fields>
+        </store_information>
+      </groups>
+    </general>
+  </sections>
+</config>

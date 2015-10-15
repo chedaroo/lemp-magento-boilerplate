@@ -1,0 +1,3 @@
+app/code/local/Esites/Editor/* app/code/local/Esites/Editor/
+app/etc/modules/Esites_Editor.xml app/etc/modules/Esites_Editor.xml
+js/tiny_mce/plugins/esites_editor/* js/tiny_mce/plugins/esites_editor/

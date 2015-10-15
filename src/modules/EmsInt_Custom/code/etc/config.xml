@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <EmsInt_Custom>
+            <version>0.0.1</version>
+        </EmsInt_Custom>
+    </modules>
+
+    <global>
+        <helpers>
+            <emsint>
+                <class>EmsInt_Custom_Helper</class>
+            </emsint>
+        </helpers>
+        <blocks>
+            <customer>
+                <rewrite>
+                    <account_navigation>EmsInt_Custom_Block_Account_Navigation</account_navigation>
+                </rewrite>
+            </customer>
+            <sales>
+                <rewrite>
+                    <order_info>EmsInt_Custom_Block_Order_Info</order_info>
+                </rewrite>
+            </sales>
+        </blocks>
+    </global>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <EmsInt_Custom>
+                    <file>EmsInt_Custom/EmsInt_Custom.xml</file>
+                </EmsInt_Custom>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>
