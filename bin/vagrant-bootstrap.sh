@@ -50,9 +50,28 @@ if [ ! -f "/usr/local/bin/n98-magerun" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling n98-magerun...\x1b[0m\x1b[21m"
   curl -s -o /usr/local/bin/n98-magerun https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar
   chmod +x /usr/local/bin/n98-magerun
+  # Update
+  n98-magerun self-update
   # Alias magerun for user
   su -l $USERNAME -c "echo \"alias magerun='n98-magerun'\" >> ~/.bash_aliases"
+  # Create dir for plugins
+  if [ ! -d "/usr/local/share/n98-magerun/modules" ]; then
+    mkdir -pv /usr/local/share/n98-magerun/modules
+  fi
 fi
+
+# Magento Project Mess Detector (Magerun plugin)
+if [ ! -d "/usr/local/share/n98-magerun/modules/mpmd" ]; then
+  echo -e "\x1b[92m\x1b[1mInstalling Magento Project Mess Detector (Magerun plugin)...\x1b[0m\x1b[21m"
+  git clone https://github.com/AOEpeople/mpmd.git /usr/local/share/n98-magerun/modules/mpmd
+fi
+
+# Magerun Modman Command (Magerun plugin)
+if [ ! -d "/usr/local/share/n98-magerun/modules/magerun-modman" ]; then
+  echo -e "\x1b[92m\x1b[1mInstalling Magerun Modman Command (Magerun plugin)...\x1b[0m\x1b[21m"
+  git clone https://github.com/fruitcakestudio/magerun-modman.git /usr/local/share/n98-magerun/modules/magerun-modman
+fi
+
 
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
 if [ ! -d "/usr/local/nvm" ]; then
