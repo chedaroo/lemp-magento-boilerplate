@@ -37,7 +37,7 @@ var bp = {
     medium: 770,
     large: 979,
     xlarge: 1199
-}
+};
 
 // ==============================================
 // Search
@@ -57,33 +57,31 @@ Varien.searchForm.prototype.initialize = function (form, field, emptyText) {
     Event.observe(this.field, 'focus', this.focus.bind(this));
     Event.observe(this.field, 'blur', this.blur.bind(this));
     this.blur();
-}
+};
 
 Varien.searchForm.prototype.submit = function (event) {
-    if (this.field.value == this.emptyText || this.field.value == ''){
+    if (this.field.value == this.emptyText || this.field.value === ''){
         Event.stop(event);
         this.field.addClassName('validation-failed');
         this.field.focus();
         return false;
     }
     return true;
-}
+};
 
 Varien.searchForm.prototype.change = function (event) {
     if (
-        this.field.value != this.emptyText
-        && this.field.value != ''
-        && this.field.hasClassName('validation-failed')
+        this.field.value != this.emptyText && this.field.value !=+ '' && this.field.hasClassName('validation-failed')
     ) {
         this.field.removeClassName('validation-failed');
     }
-}
+};
 
 Varien.searchForm.prototype.blur = function (event) {
     if (this.field.hasClassName('validation-failed')) {
         this.field.removeClassName('validation-failed');
     }
-}
+};
 
 // ==============================================
 // Pointer abstraction
@@ -303,7 +301,7 @@ var MenuManager = {
          * @returns {boolean}
          */
         shouldCancelTouch: function() {
-            if(this.touchStartPosition == null) {
+            if(this.touchStartPosition === null) {
                 return false;
             }
 
@@ -388,8 +386,8 @@ var MenuManager = {
             var fullPointerSupport = window.navigator.pointerEnabled;
 
             hoverTarget.on(enterEvent, function(e) {
-                if(e.originalEvent.pointerType === undefined // Browsers with partial PointerEvent support don't provide pointer type
-                    || e.originalEvent.pointerType == PointerManager.getPointerEventsInputTypes().MOUSE) {
+                // Browsers with partial PointerEvent support don't provide pointer type
+                if(e.originalEvent.pointerType === undefined || e.originalEvent.pointerType == PointerManager.getPointerEventsInputTypes().MOUSE) {
 
                     if(fullPointerSupport) {
                         that.mouseEnterAction(e, this);
@@ -398,8 +396,8 @@ var MenuManager = {
                     }
                 }
             }).on(leaveEvent, function(e) {
-                if(e.originalEvent.pointerType === undefined // Browsers with partial PointerEvent support don't provide pointer type
-                    || e.originalEvent.pointerType == PointerManager.getPointerEventsInputTypes().MOUSE) {
+                // Browsers with partial PointerEvent support don't provide pointer type
+                if(e.originalEvent.pointerType === undefined || e.originalEvent.pointerType == PointerManager.getPointerEventsInputTypes().MOUSE) {
 
                     if(fullPointerSupport) {
                         that.mouseLeaveAction(e, this);
@@ -684,7 +682,7 @@ $j(document).ready(function () {
 
     $j(".change").click(function (e) {
         $j( this ).toggleClass('active');
-        e.stopPropagation()
+        e.stopPropagation();
     });
 
     $j(document).click(function (e) {
@@ -867,12 +865,12 @@ $j(document).ready(function () {
             }
 
         });
-    }
+    };
 
     // ==============================================
     // UI Pattern - Toggle Content (tabs and accordions in one setup)
     // ==============================================
-    
+
     $j('.toggle-content').each(function () {
         var wrapper = jQuery(this);
 
@@ -884,6 +882,7 @@ $j(document).ready(function () {
         var dts = dl.children('dt');
         var panes = dl.children('dd');
         var groups = new Array(dts, panes);
+        var lis = ul.children();
 
         //Create a ul for tabs if necessary.
         if (hasTabs) {
@@ -895,7 +894,7 @@ $j(document).ready(function () {
                 ul.append(li);
             });
             ul.insertBefore(dl);
-            var lis = ul.children();
+            lis = ul.children();
             groups.push(lis);
         }
 
@@ -954,11 +953,11 @@ $j(document).ready(function () {
     if ($j('.col-left-first > .block').length && $j('.category-products').length) {
         enquire.register('screen and (max-width: ' + bp.medium + 'px)', {
             match: function () {
-                $j('.col-left-first').insertBefore($j('.category-products'))
+                $j('.col-left-first').insertBefore($j('.category-products'));
             },
             unmatch: function () {
                 // Move layered nav back to left column
-                $j('.col-left-first').insertBefore($j('.col-main'))
+                $j('.col-left-first').insertBefore($j('.col-main'));
             }
         });
     }
@@ -1044,12 +1043,12 @@ $j(document).ready(function () {
             match: function () {
                 $j('.gift-info').each(function() {
                   $j(this).next('td').children('textarea').appendTo(this).children();
-                })
+                });
             },
             unmatch: function () {
                 $j('.left-note').each(function() {
                     $j(this).prev('td').children('textarea').appendTo(this).children();
-                })
+                });
             }
         });
     }
@@ -1074,7 +1073,7 @@ $j(document).ready(function () {
                     // The JS ought to be agnostic of the specific CSS breakpoints, so we are dynamically checking to find
                     // each row by grouping all cells (eg, li elements) up until we find an element that is cleared.
                     // We are ignoring the first cell since it will always be cleared.
-                    if ($j(this).css('clear') != 'none' && index != 0) {
+                    if ($j(this).css('clear') != 'none' && index !== 0) {
                         gridRows.push(tempRow); // Add the previous set of rows to the main array
                         tempRow = []; // Reset the array since we're on a new row
                     }
@@ -1122,7 +1121,7 @@ $j(document).ready(function () {
                     });
                 });
             });
-        }
+        };
         alignProductGridActions();
 
         // Since the height of each cell and the number of columns per page may change when the page is resized, we are
@@ -1164,10 +1163,8 @@ var ProductMediaManager = {
         ProductMediaManager.destroyZoom();
 
         if(
-            // Don't use zoom on devices where touch has been used
-            PointerManager.getPointer() == PointerManager.TOUCH_POINTER_TYPE
-            // Don't use zoom when screen is small, or else zoom window shows outside body
-            || Modernizr.mq("screen and (max-width:" + bp.medium + "px)")
+            // Don't use zoom on devices where touch has been used, when screen is small, or else zoom window shows outside body
+            PointerManager.getPointer() == PointerManager.TOUCH_POINTER_TYPE || Modernizr.mq("screen and (max-width:" + bp.medium + "px)")
         ) {
             return; // zoom not enabled
         }

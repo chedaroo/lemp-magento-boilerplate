@@ -24,7 +24,7 @@ var options = {
   cssDir : 'css',
   sassDir : 'scss',
   bowerDir : 'bower_components',
-  parentThemeScssDir : '../../rwd/default/skin/scss',
+  parentThemeScssDir : '../../../../../www/skin/frontend/rwd/default/scss',
   log: function(title) {
     return function() {
       $.gutil.log($.gutil.colors.yellow('[' + title + ']'));
@@ -60,17 +60,15 @@ gulp.task('bower', function() {
 
 // Compile SCSS
 gulp.task('sass', function() {
-  var sassOptions = {
-    outputStyle: 'expanded',
-    includePaths: options.parentThemeScssDir
-  };
 
   var scssFilter = $.filter('**/*.scss');
 
-  return gulp.src([
-    options.bowerDir + "/compass-mixins/lib/**/*.scss",
-    options.sassDir + "/**/*.scss"
-    ])
+  var sassOptions = {
+    outputStyle: 'expanded',
+    includePaths: [options.parentThemeScssDir, options.bowerDir]
+  };
+
+  return gulp.src(options.sassDir + "/**/*.scss")
       .pipe($.iff(isDev, $.sourcemaps.init()))
       .pipe($.sass(sassOptions))
         .on('error', options.errorHandler('Sass'))
