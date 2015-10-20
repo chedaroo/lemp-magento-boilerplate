@@ -9,6 +9,13 @@ RSYNC_TARGET="/home/$USERNAME"
 # /tmp has to be world-writable, but sometimes isn't by default.
 chmod 0777 /tmp
 
+# Create webroot
+if [ ! -d "$RSYNC_TARGET/www" ]; then
+  mkdir www
+  # Create symbolic link from fileshare, composer will need this to validate magento installation
+  ln -s $RSYNC_TARGET/www $PROJECT_ROOT/www
+fi
+
 # Update package list
 echo -e "\x1b[92m\x1b[1mUpdating package list...\x1b[0m\x1b[21m"
 apt-get update > /dev/null

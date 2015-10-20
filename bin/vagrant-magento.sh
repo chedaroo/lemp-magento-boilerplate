@@ -10,15 +10,6 @@ SAMPLE_DATA="no"
 # Magento Version
 MAGENTO_VERSION="magento-ce-1.9.1.1"
 
-# Directories
-cd ~
-if [ ! -d "www" ]; then
-  mkdir www
-
-  # Create symbolic link from fileshare, composer wil need this to validate magento installation
-  ln -s /home/vagrant/www /vagrant/www
-fi
-
 # Install dependencies from composer.
 # Extensions from Composer will be deployed after Magento has been installed
 cd /vagrant
