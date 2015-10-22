@@ -32,6 +32,9 @@ fi
 # Write permissions in media
 chmod -R 0770 /home/vagrant/www/media
 
+# Downloader no longer required, secured by renaming
+mv /home/vagrant/www/downloader /home/vagrant/www/.downloader
+
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
 modman deploy-all --force
 n98-magerun sys:setup:run
