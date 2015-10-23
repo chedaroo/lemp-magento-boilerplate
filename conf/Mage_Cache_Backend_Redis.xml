@@ -1,10 +1,13 @@
+<?xml version="1.0"?>
+<config>
+    <global>
         <cache>
           <backend>Mage_Cache_Backend_Redis</backend>
           <backend_options>
             <server>127.0.0.1</server>              <!-- or absolute path to unix socket -->
             <port>6379</port>
-            <persistent>cahche-db0</persistent>               <!-- Specify a unique string like "cache-db0" to enable persistent connections. -->
-            <database>0</database>
+            <persistent>{{PERSISTENT}}</persistent>               <!-- Specify a unique string like "cache-db0" to enable persistent connections. -->
+            <database>{{DATABASE}}</database>
             <password></password>
             <force_standalone>0</force_standalone>  <!-- 0 for phpredis, 1 for standalone PHP -->
             <connect_retries>1</connect_retries>    <!-- Reduces errors due to random connection failures -->
@@ -16,3 +19,5 @@
             <compression_lib>gzip</compression_lib> <!-- Supports gzip, lzf and snappy -->
           </backend_options>
         </cache>
+    </global>
+</config>
