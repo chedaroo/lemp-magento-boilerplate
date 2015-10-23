@@ -16,7 +16,7 @@ apt-get -q -y install mysql-server mysql-client  > /dev/null
 # Install additional required packages
 echo -e "\x1b[92m\x1b[1mInstalling PHP and additional packages...\x1b[0m\x1b[21m"
 apt-get install -y vim git curl > /dev/null
-apt-get install -y redis-server php5-dev php5-cli php5-mysql php5-mcrypt php5-gd php5-curl php5-tidy php-pear php-apc  > /dev/nul
+apt-get install -y redis-server mini-httpd php5-dev php5-cli php5-mysql php5-mcrypt php5-gd php5-curl php5-tidy php-pear php-apc  > /dev/nul
 
 # Install Redis server for Backend and Session caching
 echo -e "\x1b[92m\x1b[1mInstalling Redis...\x1b[0m\x1b[21m"
