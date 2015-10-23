@@ -7,10 +7,10 @@ commands:
         timezone: Europe/London
         use_secure: no
         use_rewrites: yes
-        session_save: files
+        session_save: db
         admin_username: admin
-        admin_firstname: John
-        admin_lastname: Doe
+        admin_firstname: EMS
+        admin_lastname: Internet
         admin_password: password123
-        admin_frontname: admin
-        admin_email: defaultemail@example.com
+        admin_frontname: adminpanel
+        admin_email: info@ems-internet.co.uk
