@@ -32,8 +32,12 @@ fi
 # Write permissions in media
 chmod -R 0770 /home/vagrant/www/media
 
-# Downloader no longer required, secured by renaming
+# Downloader no longer required really as modman should be used to install new
+# extensions instead, however kept and secured by renaming
 mv /home/vagrant/www/downloader /home/vagrant/www/.downloader
+# Access to .downloader is resricted nginx conf. Generate password here
+# to allow access magento connect downloader at http://magento.local/.downloader/
+htpasswd -cb -C 12 /home/vagrant/www/var/.htpasswd $DB_USER $DB_PASS
 
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
 modman deploy-all --force
