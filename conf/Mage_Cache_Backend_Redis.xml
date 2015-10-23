@@ -3,7 +3,7 @@
           <backend_options>
             <server>127.0.0.1</server>              <!-- or absolute path to unix socket -->
             <port>6379</port>
-            <persistent></persistent>               <!-- Specify a unique string like "cache-db0" to enable persistent connections. -->
+            <persistent>cahche-db0</persistent>               <!-- Specify a unique string like "cache-db0" to enable persistent connections. -->
             <database>0</database>
             <password></password>
             <force_standalone>0</force_standalone>  <!-- 0 for phpredis, 1 for standalone PHP -->
