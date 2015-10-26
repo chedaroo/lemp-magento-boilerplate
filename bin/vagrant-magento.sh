@@ -32,14 +32,14 @@ sudo ln -fs /vagrant/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 
 # Use n98-magerun to set up Magento (database and local.xml)
 # use --noDownload if Magento core is deployed with modman or composer. Test if there already is a configured Magento installation and if so skip installation
-if [ ! -e "~/www/app/etc/local.xml" ]; then
+if [ ! -e "www/app/etc/local.xml" ]; then
   n98-magerun install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
 fi
 
 # #
 # Configure Redis on initial installation
 # #
-if [ ! -e "~/www/app/etc/Mage_Cache_Backend_Redis.xml" || ! -e "~/www/app/etc/Cm_RedisSession.xml" ]; then
+if [ ! -e "www/app/etc/Mage_Cache_Backend_Redis.xml" || ! -e "www/app/etc/Cm_RedisSession.xml" ]; then
   cd /vagrant/conf
 
   # The sed commands below create the required Redis configuration files

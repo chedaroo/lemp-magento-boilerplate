@@ -79,7 +79,6 @@ if [ ! -d "/usr/local/share/n98-magerun/modules/magerun-modman" ]; then
   git clone https://github.com/fruitcakestudio/magerun-modman.git /usr/local/share/n98-magerun/modules/magerun-modman
 fi
 
-
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
 if [ ! -d "/usr/local/nvm" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling NVM...\x1b[0m\x1b[21m"
@@ -97,24 +96,33 @@ if [ ! -d "/usr/local/nvm" ]; then
   su -l $USERNAME -c "nvm alias default stable"
 fi
 
-# Redis Cleanup tool and Cron tab
+# Redis Cleanup tool (clone)
 if [ ! -d "$PROJECT_ROOT/var/cm_redis_tools" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling Redis Cleanup tool and adding cron job...\x1b[0m\x1b[21m"
   su
   # Clone tool repo and update
   cd $PROJECT_ROOT/var/
   git clone https://github.com/samm-git/cm_redis_tools.git
+  # Update tool
   cd cm_redis_tools
   git submodule update --init --recursive
-  # write out current crontab
-  crontab -l > mycron
-  # echo new cron into cron file - Use settings in etc/local.xml <cache>
-  echo "30 2 * * * /usr/bin/php $PROJECT_ROOT/var/cm_redis_tools/rediscli.php -s 127.0.0.1 -p 6379 -d 0,1" >> mycron
-  # install new cron file
-  crontab mycron
-  rm mycron
   cd ~
 fi
+
+# Add Crontab for Redis clean up tool
+addCrontab() {
+  echo -e "\x1b[92m\x1b[1mUpdating Crontab...\x1b[0m\x1b[21m"
+  # Write out current crontab
+  crontab -l > mycron
+  # Check for line and append if not found
+  grep -Fq "$1" mycron || echo "$1" >> mycron
+  # Install modified crontab
+  crontab mycron
+  # Clean up temporary file
+  rm mycron
+}
+# add to crontab if doesn't already exist - Uses confin settings in app/etc/ (<cache>)
+addCrontab "30 2 * * * /usr/bin/php $PROJECT_ROOT/var/cm_redis_tools/rediscli.php -s 127.0.0.1 -p 6379 -d 0,1"
 
 # Magento installation script, installs project in $RSYNC_TARGET
 # $RSYNC_TARGET/src already exists due to rsync shared folder
