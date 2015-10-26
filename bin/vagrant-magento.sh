@@ -34,21 +34,29 @@ sudo ln -fs /vagrant/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 # use --noDownload if Magento core is deployed with modman or composer. Test if there already is a configured Magento installation and if so skip installation
 if [ ! -e "~/www/app/etc/local.xml" ]; then
   n98-magerun install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
+fi
 
-  # Configure Redis on initial installation
+# #
+# Configure Redis on initial installation
+# #
+if [ ! -e "~/www/app/etc/Mage_Cache_Backend_Redis.xml" || ! -e "~/www/app/etc/Cm_RedisSession.xml" ]; then
   cd /vagrant/conf
-  # Insert Redis Backend Cache config into local.xml
-  # Get template
-  # sed -n -i -e '/<\/global>/r Mage_Cache_Backend_Redis.xml' -e 1x -e '2,${x;p}' -e '${x;p}' /home/vagrant/www/app/etc/local.xml
-  # # Insert Redis Session Handler config into local.xml
-  # sed -e '/<\/session_save>/r Cm_RedisSession.xml' /home/vagrant/www/app/etc/local.xml
 
-  # Configure Redis Backend Cache
+  # The sed commands below create the required Redis configuration files
+  # from default templates and symlink them to app/etc/. {{XXXXX}} represents
+  # placeholders in the source xml files
+
+  # Redis Backend Cache
   sed -e s/"{{PERSISTENT}}"/"$CACHE_PERSISTENT"/g -e s/"{{DATABASE}}"/"$CACHE_DATABASE"/g Mage_Cache_Backend_Redis.xml > Mage_Cache_Backend_Redis.xml.vagrant
   ln -s /vagrant/conf/Mage_Cache_Backend_Redis.xml.vagrant ~/www/app/etc/Mage_Cache_Backend_Redis.xml
-  # Configure Redis Sessions
-  sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DATABASE}}"/"$SESSION_DB"/g Cm_RedisSession.xml > Cm_RedisSession.xml.vagrant
-    ln -s /vagrant/conf/Cm_RedisSession.xml.vagrant ~/www/app/etc/Cm_RedisSession.xml
+
+  # Redis Sessions
+  sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DB}}"/"$SESSION_DB"/g Cm_RedisSession.xml > Cm_RedisSession.xml.vagrant
+  ln -s /vagrant/conf/Cm_RedisSession.xml.vagrant ~/www/app/etc/Cm_RedisSession.xml
+
+  # Enable Redis sessions (disabled by default)
+  n98-magerun dev:module:enable Cm_RedisSession
+
   cd ~
 fi
 
