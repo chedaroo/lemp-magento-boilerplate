@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Magento settings
 DB_HOST="localhost"
@@ -8,7 +8,7 @@ DB_PASS=""
 # Install Sample data (beware, takes a long time)
 SAMPLE_DATA="no"
 # Magento Version
-MAGENTO_VERSION="magento-ce-1.9.1.1"
+MAGENTO_VERSION="magento-mirror-1.9.2.1"
 
 # Redis Cache
 CACHE_DATABASE="0"
@@ -33,30 +33,32 @@ sudo ln -fs /vagrant/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 # Use n98-magerun to set up Magento (database and local.xml)
 # use --noDownload if Magento core is deployed with modman or composer. Test if there already is a configured Magento installation and if so skip installation
 if [ ! -e "www/app/etc/local.xml" ]; then
-  n98-magerun install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
+  n98-magerun.phar install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
 fi
 
 # #
 # Configure Redis on initial installation
 # #
-if [ ! -e "www/app/etc/Mage_Cache_Backend_Redis.xml" || ! -e "www/app/etc/Cm_RedisSession.xml" ]; then
+#
+# The sed commands below create the required Redis configuration files
+# from default templates and symlink them to app/etc/. {{XXXXX}} represents
+# placeholders in the source xml files
+
+# Redis Backend Cache
+if [ ! -e "www/app/etc/Mage_Cache_Backend_Redis.xml" ]; then
   cd /vagrant/conf
-
-  # The sed commands below create the required Redis configuration files
-  # from default templates and symlink them to app/etc/. {{XXXXX}} represents
-  # placeholders in the source xml files
-
-  # Redis Backend Cache
   sed -e s/"{{PERSISTENT}}"/"$CACHE_PERSISTENT"/g -e s/"{{DATABASE}}"/"$CACHE_DATABASE"/g Mage_Cache_Backend_Redis.xml > Mage_Cache_Backend_Redis.xml.vagrant
   ln -s /vagrant/conf/Mage_Cache_Backend_Redis.xml.vagrant ~/www/app/etc/Mage_Cache_Backend_Redis.xml
+  cd ~
+fi
 
-  # Redis Sessions
+# Redis Sessions
+if [ ! -e "www/app/etc/Cm_RedisSession.xml" ]; then
+  cd /vagrant/conf
   sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DB}}"/"$SESSION_DB"/g Cm_RedisSession.xml > Cm_RedisSession.xml.vagrant
   ln -s /vagrant/conf/Cm_RedisSession.xml.vagrant ~/www/app/etc/Cm_RedisSession.xml
-
   # Enable Redis sessions (disabled by default)
-  n98-magerun dev:module:enable Cm_RedisSession
-
+  n98-magerun.phar dev:module:enable Cm_RedisSession
   cd ~
 fi
 
@@ -72,8 +74,8 @@ htpasswd -cb /home/vagrant/www/var/.htpasswd "$DB_USER" "$DB_PASS"
 
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
 modman deploy-all --force
-n98-magerun sys:setup:run
-n98-magerun dev:symlinks --on --global
+n98-magerun.phar sys:setup:run
+n98-magerun.phar dev:symlinks --on --global
 
 # Link local.xml from /etc, this overwrites the generated local.xml
 # from the install script. If it does not exist, the generated file gets copied to /etc first
@@ -85,4 +87,4 @@ fi
 ln -fs /vagrant/etc/local.xml ~/www/app/etc/local.xml
 
 # Some devbox specific Magento settings
-n98-magerun config:set dev/log/active 1
+n98-magerun.phar config:set dev/log/active 1

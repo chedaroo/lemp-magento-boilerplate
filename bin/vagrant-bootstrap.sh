@@ -55,12 +55,10 @@ fi
 # n98-magerun
 if [ ! -f "/usr/local/bin/n98-magerun" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling n98-magerun...\x1b[0m\x1b[21m"
-  curl -s -o /usr/local/bin/n98-magerun https://raw.githubusercontent.com/netz98/n98-magerun/master/n98-magerun.phar
-  chmod +x /usr/local/bin/n98-magerun
-  # Update
-  n98-magerun self-update
+  curl -s -o /usr/local/bin/n98-magerun.phar http://files.magerun.net/n98-magerun-latest.phar
+  chmod +x /usr/local/bin/n98-magerun.phar
   # Alias magerun for user
-  su -l $USERNAME -c "echo \"alias magerun='n98-magerun'\" >> ~/.bash_aliases"
+  su -l $USERNAME -c "echo \"alias magerun='n98-magerun.phar'\" >> ~/.bash_aliases"
   # Create dir for plugins
   if [ ! -d "/usr/local/share/n98-magerun/modules" ]; then
     mkdir -pv /usr/local/share/n98-magerun/modules
