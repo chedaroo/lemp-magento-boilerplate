@@ -57,9 +57,9 @@ if [ ! -e "www/app/etc/Cm_RedisSession.xml" ]; then
   cd /vagrant/conf
   sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DB}}"/"$SESSION_DB"/g Cm_RedisSession.xml > Cm_RedisSession.xml.vagrant
   ln -s /vagrant/conf/Cm_RedisSession.xml.vagrant ~/www/app/etc/Cm_RedisSession.xml
+  cd ~
   # Enable Redis sessions (disabled by default)
   n98-magerun.phar dev:module:enable Cm_RedisSession
-  cd ~
 fi
 
 # Write permissions in media
