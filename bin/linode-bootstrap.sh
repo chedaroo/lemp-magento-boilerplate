@@ -99,7 +99,6 @@ fi
 # Redis Cleanup tool (clone)
 if [ ! -d "$ENVIRONMENT_ROOT/var/cm_redis_tools" ]; then
   echo -e "\x1b[92m\x1b[1mInstalling Redis Cleanup tool and adding cron job...\x1b[0m\x1b[21m"
-  su
   # Clone tool repo and update
   cd $ENVIRONMENT_ROOT/var/
   git clone https://github.com/samm-git/cm_redis_tools.git

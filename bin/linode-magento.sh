@@ -119,14 +119,14 @@ htpasswd -cb $MAGENTO_ROOT/var/.htpasswd "$DB_USER" "$DB_PASS"
 
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
 modman deploy-all --force
-n98-magerun sys:setup:run
-n98-magerun dev:symlinks --on --global
+n98-magerun.phar sys:setup:run
+n98-magerun.phar dev:symlinks --on --global
 
 # Replace local.xml generated during installation with version controlled one
 # fall back to vagrant and then finally use generated if fail to find
 if [ ! -f "$ENVIRONMENT_ETC/local.xml" ]; then
   echo "Couldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead."
-  if [ ! -f "$ENVIRONMENT_ROOT/etc/vagrant/local.xml" ]; then;
+  if [ ! -f "$ENVIRONMENT_ROOT/etc/vagrant/local.xml" ]; then
     echo "Couldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead."
     # Copy generated local.xml
     cp $MAGENTO_ETC/local.xml $ENVIRONMENT_ETC/local.xml
