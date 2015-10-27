@@ -6,7 +6,7 @@ read DB_NAME
 printf "Database User"
 read DB_USER
 DB_PASS=`echo sha256sum | base64 | head -c 12`
-printf "${FORMAT[underline]}$DB_PASS${FORMAT[nf]}\n"
+printf "${FORMAT[underlined]}$DB_PASS${FORMAT[nf]}\n"
 
 DB_HOST="localhost"
 # Install Sample data (beware, takes a long time)
@@ -20,7 +20,7 @@ printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - 
 read MAGENTO_BASE_URL
 
 # Redis Cache
-printf "${FORMAT[underline]}Redis Backend Cache${FORMAT[nf]}\n"
+printf "${FORMAT[underlined]}Redis Backend Cache${FORMAT[nf]}\n"
 printf "Please select which Redis Database you would like to use for the Backend Cache."
 printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
 printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
@@ -30,7 +30,7 @@ read CACHE_DATABASE
 CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
 
 # Redis Sessions
-printf "${FORMAT[underline]}Redis Sessions${FORMAT[nf]}\n"
+printf "${FORMAT[underlined]}Redis Sessions${FORMAT[nf]}\n"
 printf "Please select which Redis Database you would like to use for the Sessions."
 printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
 printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
