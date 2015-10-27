@@ -5,17 +5,23 @@ export DEBIAN_FRONTEND=noninteractive
 USERNAME="beanstalk"
 GROUP="www-data"
 PROJECT_ROOT="/var/webroot"
+ENVIRONMENT=${PWD##*/}
+ENVIRONMENT_ROOT="$PROJECT_ROOT/$ENVIRONMENT"
+
+# Test whether script is being run from ENVIRONMENT_ROOT
+if [ "$PWD" != "$PROJECT_ROOT/$ENVIRONMENT"]; then
+  echo "Waring, you're running this script in the wrong directory!"
+  echo "Please change your working directory to the beanstalk deployment root for this environment."
+  exit
+fi
 
 # Color escape codes (for nicer output)
-source "$PROJECT_ROOT/bin/inc/bash-colors.sh"
+source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
 
 # Start here
 printf "####################################\n"
 printf "######### ${FORMAT[cyan]}Magento Workflow${FORMAT[nf]} #########\n"
 printf "####################################\n"
-printf "Which environment do you wish to create? (ie - dev, staging or production)\n"
-read ENVIRONMENT
-ENVIRONMENT_ROOT="$PROJECT_ROOT/$ENVIRONMENT"
 
 # /tmp has to be world-writable, but sometimes isn't by default.
 chmod 0777 /tmp
