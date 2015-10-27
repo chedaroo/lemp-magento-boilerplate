@@ -21,21 +21,21 @@ read MAGENTO_BASE_URL
 
 # Redis Cache
 printf "${FORMAT[lightgreen]}Redis Backend Cache${FORMAT[nf]}\n"
-printf "Please select which Redis Database you would like to use for the Backend Cache."
-printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
-printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
+printf "Please select which Redis Database you would like to use for the Backend Cache.\n"
+printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'\n"
+printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one.\n"
 printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
-printf "Redis Backend Cache Database keyspace:"
+printf "Redis Backend Cache Database keyspace:\n"
 read CACHE_DATABASE
 CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
 
 # Redis Sessions
 printf "${FORMAT[lightgreen]}Redis Sessions${FORMAT[nf]}\n"
-printf "Please select which Redis Database you would like to use for the Sessions."
-printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
-printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
+printf "Please select which Redis Database you would like to use for the Sessions.\n"
+printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'\n"
+printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one.\n"
 printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
-printf "Redis Sessions Database keyspace:"
+printf "Redis Sessions Database keyspace:\n"
 read SESSION_DB
 SESSION_PERSISTENT="session-db$SESSION_DB"
 
@@ -134,9 +134,9 @@ n98-magerun.phar dev:symlinks --on --global
 # Replace local.xml generated during installation with version controlled one
 # fall back to vagrant and then finally use generated if fail to find
 if [ ! -f "$ENVIRONMENT_ETC/local.xml" ]; then
-  printf "${FORMAT[yellow]}Couldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead.${FORMAT[nf]}"
+  printf "${FORMAT[yellow]}Couldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead.${FORMAT[nf]}\n"
   if [ ! -f "$ENVIRONMENT_ROOT/etc/vagrant/local.xml" ]; then
-    printf "${FORMAT[yellow]}Couldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead.${FORMAT[nf]}"
+    printf "${FORMAT[yellow]}Couldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead.${FORMAT[nf]}\n"
     # Copy generated local.xml
     cp $MAGENTO_ETC/local.xml $ENVIRONMENT_ETC/local.xml
   else
