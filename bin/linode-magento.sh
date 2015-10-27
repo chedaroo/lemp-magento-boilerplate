@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
 # Magento settings
-DB_HOST="localhost"
-echo "Database Name"
+printf "Database Name"
 read DB_NAME
-echo "Database User"
+printf "Database User"
 read DB_USER
 DB_PASS=`echo sha256sum | base64 | head -c 12`
+printf "${FORMAT[underline]}$DB_PASS${FORMAT[nf]}\n"
+
+DB_HOST="localhost"
 # Install Sample data (beware, takes a long time)
 SAMPLE_DATA="no"
 # Magento Version
@@ -14,27 +16,26 @@ MAGENTO_VERSION="magento-mirror-1.9.2.1"
 SHARED_MEDIA="$PROJECT_ROOT/common/media"
 
 # Magento Base URL
-echo "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/)"
+printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/)"
 read MAGENTO_BASE_URL
 
 # Redis Cache
-echo -e "\n\e[4mRedis Backend Cache\e[0m\n"
-echo "Please select which Redis Database you would like to use for the Backend Cache."
-echo "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
-echo "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
-echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
-echo "Redis Backend Cache Database keyspace:"
+printf "${FORMAT[underline]}Redis Backend Cache${FORMAT[nf]}\n"
+printf "Please select which Redis Database you would like to use for the Backend Cache."
+printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
+printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
+printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
+printf "Redis Backend Cache Database keyspace:"
 read CACHE_DATABASE
 CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
 
 # Redis Sessions
-echo -e "\n\e[4mRedis Sessions\e[0m\n"
-echo "Please select which Redis Database you would like to use for the Sessions."
-echo "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
-echo "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
-echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
-echo ""
-echo "Redis Sessions Database keyspace:"
+printf "${FORMAT[underline]}Redis Sessions${FORMAT[nf]}\n"
+printf "Please select which Redis Database you would like to use for the Sessions."
+printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
+printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
+printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
+printf "Redis Sessions Database keyspace:"
 read SESSION_DB
 SESSION_PERSISTENT="session-db$SESSION_DB"
 
@@ -107,11 +108,16 @@ if [ ! -d "$SHARED_MEDIA" ]; then
   sudo mkdir -p $SHARED_MEDIA
 	sudo mv $MAGENTO_ROOT/media/* $SHARED_MEDIA
 fi
-# Create the Media folder Symlink
-sudo ln -fs $SHARED_MEDIA $MAGENTO_ROOT/media
 
+# Create the Media folder Symlink
+sudo ln -fs $SHARED_MEDIA $MAGENTO_ROOT
+
+# Sort Permissions
 sudo chmod -R 0770 $SHARED_MEDIA
 sudo chown -R www-data $SHARED_MEDIA
+
+# Clear contents of old filesystem cache
+rm -rf $MAGENTO_ROOT/var/cache/*
 
 # Downloader no longer required really as modman should be used to install new
 # extensions instead, however kept and secured by renaming
@@ -128,9 +134,9 @@ n98-magerun.phar dev:symlinks --on --global
 # Replace local.xml generated during installation with version controlled one
 # fall back to vagrant and then finally use generated if fail to find
 if [ ! -f "$ENVIRONMENT_ETC/local.xml" ]; then
-  echo -e "\e[33mCouldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead.\e[0m"
+  printf "${FORMAT[yellow]}Couldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead.${FORMAT[nf]}"
   if [ ! -f "$ENVIRONMENT_ROOT/etc/vagrant/local.xml" ]; then
-    echo -e "\e[33mCouldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead.\e[0m"
+    printf "${FORMAT[yellow]}Couldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead.${FORMAT[nf]}"
     # Copy generated local.xml
     cp $MAGENTO_ETC/local.xml $ENVIRONMENT_ETC/local.xml
   else

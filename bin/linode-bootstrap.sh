@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 export DEBIAN_FRONTEND=noninteractive
 
-echo "####################################"
-echo "######### Magento Workflow #########"
-echo "####################################\n\n"
-echo "Which environment do you wish to create? (ie - dev, staging or production)"
+# Color escape codes (for nicer output)
+source "$PROJECT_ROOT/bin/inc/bash-colors.sh"
+
+printf "####################################"
+printf "######### ${FORMAT[cyan]}Magento Workflow${FORMAT[nf]} #########"
+printf "####################################\n"
+printf "Which environment do you wish to create? (ie - dev, staging or production)"
 read ENVIRONMENT
 USERNAME="beanstalk"
 GROUP="www-data"
@@ -15,7 +18,7 @@ ENVIRONMENT_ROOT="$PROJECT_ROOT/$ENVIRONMENT"
 chmod 0777 /tmp
 
 # Update package list
-echo -e "\e[92m\e[1mUpdating package list...\e[0m"
+printf "${FORMAT[lightgreen]}${FORMAT[bold]}Updating package list...${FORMAT[nf]}"
 apt-get update > /dev/null
 
 # Install required Ubuntu Packages
@@ -26,7 +29,7 @@ if [ ! -e ~/MYSQL-SECURE.flag ]; then
   source "$ENVIRONMENT_ROOT/bin/inc/linode-mysql.sh"
   touch ~/MYSQL-SECURE.flag
 else
-  echo "Please enter the current root MySQL password"
+  printf "Please enter the current root MySQL password"
   read MYSQL_ROOT_PASSWORD
 fi
 
@@ -45,21 +48,21 @@ git config --global alias.tree "log --oneline --decorate --all --graph"
 #
 # Composer
 if [ ! -f "/usr/local/bin/composer" ]; then
-  echo -e "\e[92m\e[1mInstalling Composer...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing Composer...${FORMAT[nf]}"
   curl -sS https://getcomposer.org/installer | php
   mv composer.phar /usr/local/bin/composer
 fi
 
 # Modman
 if [ ! -f "/usr/local/bin/modman" ]; then
-  echo -e "\e[92m\e[1mInstalling Modman...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing Modman...${FORMAT[nf]}"
   curl -s -o /usr/local/bin/modman https://raw.githubusercontent.com/colinmollenhour/modman/master/modman
   chmod +x /usr/local/bin/modman
 fi
 
 # n98-magerun
 if [ ! -f "/usr/local/bin/n98-magerun" ]; then
-  echo -e "\e[92m\e[1mInstalling n98-magerun...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing n98-magerun...${FORMAT[nf]}"
   curl -s -o /usr/local/bin/n98-magerun.phar http://files.magerun.net/n98-magerun-latest.phar
   chmod +x /usr/local/bin/n98-magerun.phar
   # Alias magerun for user
@@ -72,19 +75,19 @@ fi
 
 # Magento Project Mess Detector (Magerun plugin)
 if [ ! -d "/usr/local/share/n98-magerun/modules/mpmd" ]; then
-  echo -e "\e[92m\e[1mInstalling Magento Project Mess Detector (Magerun plugin)...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing Magento Project Mess Detector (Magerun plugin)...${FORMAT[nf]}"
   git clone https://github.com/AOEpeople/mpmd.git /usr/local/share/n98-magerun/modules/mpmd
 fi
 
 # Magerun Modman Command (Magerun plugin)
 if [ ! -d "/usr/local/share/n98-magerun/modules/magerun-modman" ]; then
-  echo -e "\e[92m\e[1mInstalling Magerun Modman Command (Magerun plugin)...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing Magerun Modman Command (Magerun plugin)...${FORMAT[nf]}"
   git clone https://github.com/fruitcakestudio/magerun-modman.git /usr/local/share/n98-magerun/modules/magerun-modman
 fi
 
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
 if [ ! -d "/usr/local/nvm" ]; then
-  echo -e "\e[92m\e[1mInstalling NVM...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing NVM...${FORMAT[nf]}"
   curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | NVM_DIR=/usr/local/nvm bash
   # Source NVM for all users
   NVM_DIR="/usr/local/nvm"
@@ -93,7 +96,7 @@ if [ ! -d "/usr/local/nvm" ]; then
   # Change permission to allow all users to install Node versions
   chmod 0777 -R /usr/local/nvm
   # Install latest stable version of Node.js and make default
-  echo -e "\e[92m\e[1mInstalling latest stable version of Node.js...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing latest stable version of Node.js...${FORMAT[nf]}"
   source ~/.bashrc
   su -l $USERNAME -c "nvm install stable"
   su -l $USERNAME -c "nvm alias default stable"
@@ -101,7 +104,7 @@ fi
 
 # Redis Cleanup tool (clone)
 if [ ! -d "$ENVIRONMENT_ROOT/var/cm_redis_tools" ]; then
-  echo -e "\e[92m\e[1mInstalling Redis Cleanup tool and adding cron job...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Installing Redis Cleanup tool and adding cron job...${FORMAT[nf]}"
   # Clone tool repo and update
   cd $ENVIRONMENT_ROOT/var/
   git clone https://github.com/samm-git/cm_redis_tools.git
@@ -113,7 +116,7 @@ fi
 
 # Add Crontab for Redis clean up tool
 addCrontab() {
-  echo -e "\e[92m\e[1mUpdating Crontab...\e[0m"
+  printf "${FORMAT[lightgreen]}${FORMAT[bold]}Updating Crontab...${FORMAT[nf]}"
   # Write out current crontab
   crontab -l > mycron
   # Check for line and append if not found
@@ -127,7 +130,7 @@ addCrontab() {
 addCrontab "30 2 * * * /usr/bin/php $ENVIRONMENT_ROOT/var/cm_redis_tools/rediscli.php -s 127.0.0.1 -p 6379 -d 0,1"
 
 # Magento installation script
-sudo -u $USERNAME -H ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh -c "sh $ENVIRONMENT_ROOT/bin/linode-magento.sh"
+sudo -u $USERNAME -H FORMAT=$FORMAT ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh -c "sh $ENVIRONMENT_ROOT/bin/linode-magento.sh"
 
 # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
 cp -f $ENVIRONMENT_ROOT/conf/my.cnf /etc/mysql/my.cnf
