@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Magento settings
 DB_HOST="localhost"
@@ -12,8 +12,29 @@ SAMPLE_DATA="no"
 # Magento Version
 MAGENTO_VERSION="magento-mirror-1.9.2.1"
 SHARED_MEDIA="$PROJECT_ROOT/common/media"
+
+# Magento Base URL
 echo "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/)"
 read MAGENTO_BASE_URL
+
+# Redis Cache
+echo "Please select which Redis Database you would like to use for the Backend Cache."
+echo "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
+echo "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
+echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)"
+echo ""
+echo "Redis Backend Cache Database keyspace:"
+read CACHE_DATABASE
+CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
+# Redis Sessions
+echo "Please select which Redis Database you would like to use for the Sessions."
+echo "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
+echo "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
+echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)"
+echo ""
+echo "Redis Sessions Database keyspace:"
+read SESSION_DB
+SESSION_PERSISTENT="session-db$SESSION_DB"
 
 # Environment
 ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/$ENVIRONMENT"
