@@ -139,7 +139,7 @@ addCrontab() {
 addCrontab "30 2 * * * /usr/bin/php $ENVIRONMENT_ROOT/var/cm_redis_tools/rediscli.php -s 127.0.0.1 -p 6379 -d 0,1"
 
 # Magento installation script
-sudo -u $USERNAME -H FORMAT=$FORMAT ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh -c "bash $ENVIRONMENT_ROOT/bin/linode-magento.sh"
+sudo -u $USERNAME -H ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh -c "bash $ENVIRONMENT_ROOT/bin/linode-magento.sh"
 
 # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
 cp -f $ENVIRONMENT_ROOT/conf/my.cnf /etc/mysql/my.cnf

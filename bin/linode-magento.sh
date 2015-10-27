@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Color escape codes (for nicer output)
+source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
+
 # Magento settings
 printf "Database Name\n"
 read DB_NAME
