@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
+#
+# Color escape codes (for nicer output)
+source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
 
 # Magento settings
-printf "Database Name"
+printf "Database Name\n"
 read DB_NAME
-printf "Database User"
+printf "Database User\n"
 read DB_USER
 DB_PASS=`echo sha256sum | base64 | head -c 12`
 printf "${FORMAT[underlined]}$DB_PASS${FORMAT[nf]}\n"
