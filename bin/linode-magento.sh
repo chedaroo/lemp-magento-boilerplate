@@ -18,19 +18,21 @@ echo "Please enter the Magento Base URL inc protocol and trailing slash (ie - ht
 read MAGENTO_BASE_URL
 
 # Redis Cache
+echo -e "\n\e[4mRedis Backend Cache\e[0m\n"
 echo "Please select which Redis Database you would like to use for the Backend Cache."
 echo "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
 echo "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
-echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)"
-echo ""
+echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
 echo "Redis Backend Cache Database keyspace:"
 read CACHE_DATABASE
 CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
+
 # Redis Sessions
+echo -e "\n\e[4mRedis Sessions\e[0m\n"
 echo "Please select which Redis Database you would like to use for the Sessions."
 echo "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'"
 echo "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one."
-echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)"
+echo "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
 echo ""
 echo "Redis Sessions Database keyspace:"
 read SESSION_DB
@@ -102,10 +104,11 @@ n98-magerun.phar dev:module:enable Cm_RedisSession
 
 # Move generated media dir to shared loaction if doesn't already exist
 if [ ! -d "$SHARED_MEDIA" ]; then
-	sudo mv www/media $SHARED_MEDIA
+  sudo mkdir -p $SHARED_MEDIA
+	sudo mv $MAGENTO_ROOT/media/* $SHARED_MEDIA
 fi
 # Create the Media folder Symlink
-sudo ln -fs $SHARED_MEDIA $ENVIRONMENT_ROOT/www/media
+sudo ln -fs $SHARED_MEDIA $MAGENTO_ROOT/media
 
 sudo chmod -R 0770 $SHARED_MEDIA
 sudo chown -R www-data $SHARED_MEDIA
@@ -125,9 +128,9 @@ n98-magerun.phar dev:symlinks --on --global
 # Replace local.xml generated during installation with version controlled one
 # fall back to vagrant and then finally use generated if fail to find
 if [ ! -f "$ENVIRONMENT_ETC/local.xml" ]; then
-  echo "Couldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead."
+  echo -e "\e[33mCouldn't find $ENVIRONMENT_ETC/local.xml\nAttempting to copy $ENVIRONMENT_ROOT/etc/vagrant/local.xml an link instead.\e[0m"
   if [ ! -f "$ENVIRONMENT_ROOT/etc/vagrant/local.xml" ]; then
-    echo "Couldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead."
+    echo -e "\e[33mCouldn't find $ENVIRONMENT_ROOT/etc/vagrant/local.xml\nAttempting to copy $MAGENTO_ETC/local.xml to $ENVIRONMENT_ETC/local.xml and link back instead.\e[0m"
     # Copy generated local.xml
     cp $MAGENTO_ETC/local.xml $ENVIRONMENT_ETC/local.xml
   else

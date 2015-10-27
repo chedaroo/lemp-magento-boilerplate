@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 export DEBIAN_FRONTEND=noninteractive
 
-echo "Environment you wish to create - ie dev, staging, production"
+echo "####################################"
+echo "######### Magento Workflow #########"
+echo "####################################\n\n"
+echo "Which environment do you wish to create? (ie - dev, staging or production)"
 read ENVIRONMENT
 USERNAME="beanstalk"
 GROUP="www-data"
@@ -12,7 +15,7 @@ ENVIRONMENT_ROOT="$PROJECT_ROOT/$ENVIRONMENT"
 chmod 0777 /tmp
 
 # Update package list
-echo -e "\x1b[92m\x1b[1mUpdating package list...\x1b[0m"
+echo -e "\e[92m\e[1mUpdating package list...\e[0m"
 apt-get update > /dev/null
 
 # Install required Ubuntu Packages
@@ -42,21 +45,21 @@ git config --global alias.tree "log --oneline --decorate --all --graph"
 #
 # Composer
 if [ ! -f "/usr/local/bin/composer" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Composer...\x1b[0m"
+  echo -e "\e[92m\e[1mInstalling Composer...\e[0m"
   curl -sS https://getcomposer.org/installer | php
   mv composer.phar /usr/local/bin/composer
 fi
 
 # Modman
 if [ ! -f "/usr/local/bin/modman" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Modman...\x1b[0m"
+  echo -e "\e[92m\e[1mInstalling Modman...\e[0m"
   curl -s -o /usr/local/bin/modman https://raw.githubusercontent.com/colinmollenhour/modman/master/modman
   chmod +x /usr/local/bin/modman
 fi
 
 # n98-magerun
 if [ ! -f "/usr/local/bin/n98-magerun" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling n98-magerun...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mInstalling n98-magerun...\e[0m"
   curl -s -o /usr/local/bin/n98-magerun.phar http://files.magerun.net/n98-magerun-latest.phar
   chmod +x /usr/local/bin/n98-magerun.phar
   # Alias magerun for user
@@ -69,19 +72,19 @@ fi
 
 # Magento Project Mess Detector (Magerun plugin)
 if [ ! -d "/usr/local/share/n98-magerun/modules/mpmd" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Magento Project Mess Detector (Magerun plugin)...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mInstalling Magento Project Mess Detector (Magerun plugin)...\e[0m"
   git clone https://github.com/AOEpeople/mpmd.git /usr/local/share/n98-magerun/modules/mpmd
 fi
 
 # Magerun Modman Command (Magerun plugin)
 if [ ! -d "/usr/local/share/n98-magerun/modules/magerun-modman" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Magerun Modman Command (Magerun plugin)...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mInstalling Magerun Modman Command (Magerun plugin)...\e[0m"
   git clone https://github.com/fruitcakestudio/magerun-modman.git /usr/local/share/n98-magerun/modules/magerun-modman
 fi
 
 # NVM - Node.js Version Manager (run 'nvm install x.xx.xx' to install required node version)
 if [ ! -d "/usr/local/nvm" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling NVM...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mInstalling NVM...\e[0m"
   curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.29.0/install.sh | NVM_DIR=/usr/local/nvm bash
   # Source NVM for all users
   NVM_DIR="/usr/local/nvm"
@@ -90,7 +93,7 @@ if [ ! -d "/usr/local/nvm" ]; then
   # Change permission to allow all users to install Node versions
   chmod 0777 -R /usr/local/nvm
   # Install latest stable version of Node.js and make default
-  echo -e "\x1b[92m\x1b[1mInstalling latest stable version of Node.js...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mInstalling latest stable version of Node.js...\e[0m"
   source ~/.bashrc
   su -l $USERNAME -c "nvm install stable"
   su -l $USERNAME -c "nvm alias default stable"
@@ -98,7 +101,7 @@ fi
 
 # Redis Cleanup tool (clone)
 if [ ! -d "$ENVIRONMENT_ROOT/var/cm_redis_tools" ]; then
-  echo -e "\x1b[92m\x1b[1mInstalling Redis Cleanup tool and adding cron job...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mInstalling Redis Cleanup tool and adding cron job...\e[0m"
   # Clone tool repo and update
   cd $ENVIRONMENT_ROOT/var/
   git clone https://github.com/samm-git/cm_redis_tools.git
@@ -110,7 +113,7 @@ fi
 
 # Add Crontab for Redis clean up tool
 addCrontab() {
-  echo -e "\x1b[92m\x1b[1mUpdating Crontab...\x1b[0m\x1b[21m"
+  echo -e "\e[92m\e[1mUpdating Crontab...\e[0m"
   # Write out current crontab
   crontab -l > mycron
   # Check for line and append if not found
@@ -140,6 +143,9 @@ fi
 ln -fs $ENVIRONMENT_ROOT/conf/sites-enabled/* /etc/nginx/sites-enabled/
 # Remove link for local Vagrant dev env Nginx conf file
 rm /etc/nginx/sites-enabled/local-vagrant.conf
-
+# Symlink environment
+if [ ! -e "/etc/nginx/nginx.conf" ] ; then
+  ln -fs $ENVIRONMENT_ROOT/conf/nginx.conf /etc/nginx/nginx.conf
+fi
 # Restart Nginx
 service nginx restart
