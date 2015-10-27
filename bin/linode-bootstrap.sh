@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 export DEBIAN_FRONTEND=noninteractive
 
-# Color escape codes (for nicer output)
-source "$PROJECT_ROOT/bin/inc/bash-colors.sh"
-
-printf "####################################"
-printf "######### ${FORMAT[cyan]}Magento Workflow${FORMAT[nf]} #########"
-printf "####################################\n"
-printf "Which environment do you wish to create? (ie - dev, staging or production)"
-read ENVIRONMENT
+# Constants
 USERNAME="beanstalk"
 GROUP="www-data"
 PROJECT_ROOT="/var/webroot"
+
+# Color escape codes (for nicer output)
+source "$PROJECT_ROOT/bin/inc/bash-colors.sh"
+
+# Start here
+printf "####################################\n"
+printf "######### ${FORMAT[cyan]}Magento Workflow${FORMAT[nf]} #########\n"
+printf "####################################\n"
+printf "Which environment do you wish to create? (ie - dev, staging or production)\n"
+read ENVIRONMENT
 ENVIRONMENT_ROOT="$PROJECT_ROOT/$ENVIRONMENT"
 
 # /tmp has to be world-writable, but sometimes isn't by default.
