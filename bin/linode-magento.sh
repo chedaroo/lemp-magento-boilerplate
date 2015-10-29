@@ -2,6 +2,14 @@
 
 # Color escape codes (for nicer output)
 source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
+source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
+
+test_file() {
+  if ["${1}" "${2}" ]; then
+    return true
+  fi
+  return false
+}
 
 # Magento settings
 printf "Database Name\n"
@@ -18,8 +26,22 @@ SAMPLE_DATA="no"
 MAGENTO_VERSION="magento-mirror-1.9.2.1"
 SHARED_MEDIA="$PROJECT_ROOT/common/media"
 
+# Environment
+ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/$ENVIRONMENT"
+
+# Magento
+MAGENTO_ROOT="$ENVIRONMENT_ROOT/www"
+MAGENTO_ETC="$MAGENTO_ROOT/app/etc"
+
+# FLAGS
+MAGENTO_INSTALLED=$(test_file -e $MAGENTO_ETC/local.xml)
+BACKEND_CACHE_CONFIGURED=$(test_file -e $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml)
+BACKEND_CACHE_LINKED=$(test_file -e $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml)
+SESSIONS_CONFIGURED=$(test_file -e $ENVIRONMENT_ETC/Cm_RedisSession.xml)
+SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
+
 # Magento Base URL
-printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/)"
+printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
 read MAGENTO_BASE_URL
 
 # Redis Cache
@@ -29,7 +51,8 @@ printf "To see a list of existing database in use start another SSH session and 
 printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one.\n"
 printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
 printf "Redis Backend Cache Database keyspace:\n"
-read CACHE_DATABASE
+redis_select_db
+CACHE_DATABASE="${get_db}"
 CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
 
 # Redis Sessions
@@ -39,17 +62,14 @@ printf "To see a list of existing database in use start another SSH session and 
 printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one.\n"
 printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
 printf "Redis Sessions Database keyspace:\n"
-read SESSION_DB
+redis_select_db
+SESSION_DB="${get_db}"
 SESSION_PERSISTENT="session-db$SESSION_DB"
 
-# Environment
-ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/$ENVIRONMENT"
-# Magento
-MAGENTO_ROOT="$ENVIRONMENT_ROOT/www"
-MAGENTO_ETC="$MAGENTO_ROOT/app/etc"
-
-# Directories
+# Go to deployment root
 cd $ENVIRONMENT_ROOT
+
+# Create Magento installation root
 if [ ! -d "$MAGENTO_ROOT" ]; then
   mkdir www
 fi
@@ -70,36 +90,36 @@ mysql -u root -p$MYSQL_ROOT_PASSWORD -e "create database if not exists $DB_NAME;
 
 # Use n98-magerun to set up Magento (database and local.xml)
 # use --noDownload if Magento core is deployed with modman or composer. Test if there already is a configured Magento installation and if so skip installation
-if [ ! -e "$MAGENTO_ETC/local.xml" ]; then
+if [ ! $MAGENTO_INSTALLED ]; then
   n98-magerun.phar install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="$MAGENTO_BASE_URL"
 fi
 
-# Redis configuration progect directory
+# Create environment etc directory
 if [ ! -d "$ENVIRONMENT_ETC" ]; then
   mkdir $ENVIRONMENT_ETC
 fi
 
 # Redis Backend Cache create configuration xml
-if [ ! -e "$ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml" ]; then
+if [ ! $BACKEND_CACHE_CONFIGURED ]; then
   # Creates a new config file by copying the source xml template but
   # also replaces the {{XXXXX}} placeholders with real values
   sed -e s/"{{PERSISTENT}}"/"$CACHE_PERSISTENT"/g -e s/"{{DATABASE}}"/"$CACHE_DATABASE"/g $ENVIRONMENT_ROOT/conf/Mage_Cache_Backend_Redis.xml > $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml
 fi
 
 # Redis Backend Cache symlink to configuration xml
-if [ ! -e "$MAGENTO_ETC/Mage_Cache_Backend_Redis.xml" ]; then
+if [ ! $BACKEND_CACHE_LINKED ]; then
   ln -s $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
 fi
 
 # Redis Sessions create configuration xml
-if [ ! -e "$ENVIRONMENT_ETC/Cm_RedisSession.xml" ]; then
+if [ ! $SESSIONS_CONIGURED ]; then
   # Creates a new config file by copying the source xml template but
   # also replaces the {{XXXXX}} placeholders with real values
   sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DB}}"/"$SESSION_DB"/g $ENVIRONMENT_ROOT/conf/Cm_RedisSession.xml > $ENVIRONMENT_ETC/Cm_RedisSession.xml
 fi
 
 # Redis Sessions symlink to configuration xml
-if [ ! -e "$MAGENTO_ETC/Cm_RedisSession.xml" ]; then
+if [ ! $SESSIONS_LINKED ]; then
   ln -s $ENVIRONMENT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
 fi
 
