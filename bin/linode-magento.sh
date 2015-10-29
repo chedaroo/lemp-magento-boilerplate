@@ -6,9 +6,9 @@ source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
 
 test_file() {
   if [ "${1}" "${2}" ]; then
-    return true
+    return 1
   fi
-  return false
+  return 0
 }
 
 # Magento settings
