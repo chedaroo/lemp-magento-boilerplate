@@ -11,19 +11,15 @@ test_file() {
 source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
 source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
 
-DB_HOST="localhost"
-# Install Sample data (beware, takes a long time)
-SAMPLE_DATA="no"
-# Magento Version
-MAGENTO_VERSION="magento-mirror-1.9.2.1"
-SHARED_MEDIA="$PROJECT_ROOT/common/media"
-
 # Environment
 ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/$ENVIRONMENT"
 
 # Magento
 MAGENTO_ROOT="$ENVIRONMENT_ROOT/www"
 MAGENTO_ETC="$MAGENTO_ROOT/app/etc"
+
+# Shared with other environments
+SHARED_MEDIA="$PROJECT_ROOT/common/media"
 
 # FLAGS
 MAGENTO_INSTALLED=$(test_file -e $MAGENTO_ETC/local.xml)
@@ -32,23 +28,37 @@ BACKEND_CACHE_LINKED=$(test_file -e $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml)
 SESSIONS_CONFIGURED=$(test_file -e $ENVIRONMENT_ETC/Cm_RedisSession.xml)
 SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
 
-if [ ! MAGENTO_INSTALLED ]; then
+# if [ ! MAGENTO_INSTALLED ]; then
 
   unset DB_NAME
   unset DB_USER
   unset DB_PASS
 
+  # Get array of existing MySQL Databases
   mysql_databases=($(mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database))
 
+  # Configuration for the installer
+  SAMPLE_DATA="no"
+  DB_HOST="localhost"
+  MAGENTO_VERSION="magento-mirror-1.9.2.1"
+
+  # Request / generate database configuration
   while [[ ! ${DB_NAME} == magento_* ]]; do
+    # Request database name
     printf "Please enter the name of the database you would like to use for this installation. This needs to be prefixed with 'magento'.\n"
     printf "[HINT] A good name would be something like 'magento_$ENVIRONMENT'\n"
     read DB_NAME
-
+    # Check database name doesn't already exist
     if in_array mysql_database "${DB_NAME}"; then
       printf "WARNING: The database 'magento_${DB_NAME}' already exists and so can't be used :("
       unset DB_NAME
+    # Check database name is valid (starts with 'magento_')
     elif [[ ! ${DB_NAME} == magento_* ]]; then
+      unset DB_NAME
+    # Check database name is Alpha Numeric and underscore only
+    elif [[ ! ${DB_NAME} == "^[a-zA-Z0-9_]*$" ]]; then
+    # All is good, accept DB_NAME
+    else
       # Use DB_NAME as DB_USER
       DB_USER="${DB_NAME}"
       # Generate password in buffer
@@ -64,7 +74,7 @@ if [ ! MAGENTO_INSTALLED ]; then
           done
 
       } | sort -R | awk '{printf "%s",$1}'
-      # Assign password in buffer to variable
+      # Assign password in buffer to DB_PASS
       DB_PASS=""
     fi
   done
@@ -78,8 +88,8 @@ if [ ! MAGENTO_INSTALLED ]; then
   # Magento Base URL
   printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
   read MAGENTO_BASE_URL
-fi
-
+# fi
+exit
 
 # Redis Cache
 printf "${FORMAT[lightgreen]}Redis Backend Cache${FORMAT[nf]}\n"
