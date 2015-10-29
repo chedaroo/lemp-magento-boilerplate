@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# Color escape codes (for nicer output)
-source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
-source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
-
 test_file() {
   if [ "${1}" "${2}" ]; then
     return 1
@@ -11,13 +7,9 @@ test_file() {
   return 0
 }
 
-# Magento settings
-printf "Database Name\n"
-read DB_NAME
-printf "Database User\n"
-read DB_USER
-DB_PASS=`echo sha256sum | base64 | head -c 12`
-printf "${FORMAT[lightgreen]}$DB_PASS${FORMAT[nf]}\n"
+# Color escape codes (for nicer output)
+source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
+source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
 
 DB_HOST="localhost"
 # Install Sample data (beware, takes a long time)
@@ -40,9 +32,54 @@ BACKEND_CACHE_LINKED=$(test_file -e $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml)
 SESSIONS_CONFIGURED=$(test_file -e $ENVIRONMENT_ETC/Cm_RedisSession.xml)
 SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
 
-# Magento Base URL
-printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
-read MAGENTO_BASE_URL
+if [ ! MAGENTO_INSTALLED ]; then
+
+  unset DB_NAME
+  unset DB_USER
+  unset DB_PASS
+
+  mysql_databases=($(mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database))
+
+  while [[ ! ${DB_NAME} == magento_* ]]; do
+    printf "Please enter the name of the database you would like to use for this installation. This needs to be prefixed with 'magento'.\n"
+    printf "[HINT] A good name would be something like 'magento_$ENVIRONMENT'\n"
+    read DB_NAME
+
+    if in_array mysql_database "${DB_NAME}"; then
+      printf "WARNING: The database 'magento_${DB_NAME}' already exists and so can't be used :("
+      unset DB_NAME
+    elif [[ ! ${DB_NAME} == magento_* ]]; then
+      # Use DB_NAME as DB_USER
+      DB_USER="${DB_NAME}"
+      # Generate password in buffer
+      choose() { echo ${1:RANDOM%${#1}:1} $RANDOM; }
+      {
+          choose '!@#$%^\&'
+          choose '0123456789'
+          choose 'abcdefghijklmnopqrstuvwxyz'
+          choose 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          for i in $( seq 1 $(( 12 + RANDOM % 8 )) )
+          do
+            choose '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          done
+
+      } | sort -R | awk '{printf "%s",$1}'
+      # Assign password in buffer to variable
+      DB_PASS=""
+    fi
+  done
+
+  # Magento database details
+  printf "${FORMAT[lightgreen]}Magento Database details...${FORMAT[nf]}\n"
+  printf "${FORMAT[cyan]}Database Name: ${FORMAT[nf]}$DB_NAME\n"
+  printf "${FORMAT[cyan]}Database User: ${FORMAT[nf]}$DB_USER\n"
+  printf "${FORMAT[cyan]}Database Password: ${FORMAT[nf]}$DB_PASS\n"
+
+  # Magento Base URL
+  printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
+  read MAGENTO_BASE_URL
+fi
+
 
 # Redis Cache
 printf "${FORMAT[lightgreen]}Redis Backend Cache${FORMAT[nf]}\n"
