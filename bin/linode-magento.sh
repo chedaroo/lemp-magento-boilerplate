@@ -53,10 +53,10 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
       printf "WARNING: The database 'magento_${DB_NAME}' already exists and so can't be used :("
       unset DB_NAME
     # Check database name is valid (starts with 'magento_')
-    elif [[ ! ${DB_NAME} == magento_* ]]; then
+    elif [[ ! "${DB_NAME}" == magento_* ]]; then
       unset DB_NAME
     # Check database name is Alpha Numeric and underscore only
-    elif [[ ! ${DB_NAME} == "^[a-zA-Z0-9_]*$" ]]; then
+    elif [[ ! "${DB_NAME}" == "^[a-zA-Z0-9_]*$" ]]; then
       unset DB_NAME
     # All is good, accept DB_NAME
     else
