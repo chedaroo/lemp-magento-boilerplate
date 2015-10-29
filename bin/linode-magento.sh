@@ -5,7 +5,7 @@ source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
 source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
 
 test_file() {
-  if ["${1}" "${2}" ]; then
+  if [ "${1}" "${2}" ]; then
     return true
   fi
   return false
