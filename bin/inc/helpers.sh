@@ -24,7 +24,7 @@ in_array() {
 
 # Message styler
 style_message() {
-  local type="${$1^^}"
+  local type=${$1^^}
   local message="[$type]${FORMAT[nf]} $2\n"
   case $type in
     "HINT")
@@ -44,7 +44,7 @@ style_message() {
 
 # Message styler
 style_config() {
-  local label="${$1^}"
+  local label=${$1^}
   local value="$2\n"
   printf "${FORMAT[lightcyan]}$label:${FORMAT[nf]} $value"
 }
