@@ -27,7 +27,7 @@ printf "${FORMAT[yellow]}####################################${FORMAT[nf]}\n"
 chmod 0777 /tmp
 
 # Update package list
-style_line lightgreen "Updating package list..."
+style_line cyan bold "Updating package list..."
 apt-get update > /dev/null
 
 # Install required Ubuntu Packages
