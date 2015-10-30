@@ -86,14 +86,14 @@ style_config() {
   printf "${FORMAT[lightcyan]}$label:${FORMAT[nf]} $value"
 }
 
-######################################
+##################################################
 # Styles up a line
 # Arguments:
-#   params - array of all parameters
-#   message - the last parameter
+#   params - array of all format options
+#   message - the last argument and line to format
 # Returns:
 #   none
-######################################
+##################################################
 style_line() {
   local params=("$@")
   local message=${params[-1]}
@@ -101,9 +101,10 @@ style_line() {
   unset params[${#params[@]}-1]
 
   for param in "${params[@]}"; do
-    $style="$style$FORMAT[$param]"
+    # Add formatting to
+    style=${style}${FORMAT[$param]}
   done
 
-  printf "${style}$message${FORMAT[nf]}\n"
+  printf "$style$message${FORMAT[nf]}\n"
 
 }
