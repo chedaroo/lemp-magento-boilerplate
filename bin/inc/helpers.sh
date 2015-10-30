@@ -25,19 +25,19 @@ in_array() {
 # Message styler
 style_message() {
   local type=${$1^^}
-  local message="[$type]${FORMAT[nf]} $2\n"
+  local message="${FORMAT[nf]}$2\n"
   case $type in
     "HINT")
-      printf "${FORMAT[lightcyan]}${FORMAT[bold]}[$type]${FORMAT[nf]} $message\n"
+      printf "${FORMAT[lightcyan]}${FORMAT[bold]}[HINT] $message"
       ;;
-    "WARNING")
-      printf "${FORMAT[lightyellow]}${FORMAT[bold]}[$type]${FORMAT[nf]} $message\n"
+    "WARN")
+      printf "${FORMAT[lightyellow]}${FORMAT[bold]}[WARNING] $message"
       ;;
     "ERROR")
-      printf "${FORMAT[lightred]}${FORMAT[bold]}$message"
+      printf "${FORMAT[lightred]}${FORMAT[bold]}[ERROR] $message"
       ;;
     *)
-      printf "$message"
+      printf "[$type] $message"
       ;;
   esac
 }
