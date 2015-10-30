@@ -27,7 +27,7 @@ printf "${FORMAT[yellow]}####################################${FORMAT[nf]}\n"
 chmod 0777 /tmp
 
 # Update package list
-printf "${FORMAT[lightgreen]}${FORMAT[bold]}Updating package list...${FORMAT[nf]}\n"
+style_line lightgreen "Updating package list..."
 apt-get update > /dev/null
 
 # Install required Ubuntu Packages
@@ -38,8 +38,12 @@ if [ ! -e ~/MYSQL-SECURE.flag ]; then
   source "$ENVIRONMENT_ROOT/bin/inc/linode-mysql.sh"
   touch ~/MYSQL-SECURE.flag
 else
-  printf "Please enter the current root MySQL password\n"
-  read MYSQL_ROOT_PASSWORD
+  style_message warn "MySQL has already been installed and secured."
+  read -s -p "Enter MYSQL root password: " MYSQL_ROOT_PASSWORD
+  while ! mysql -u root -p$MYSQL_ROOT_PASSWORD  -e ";" ; do
+    read -p "Can't connect, please retry: " MYSQL_ROOT_PASSWORD
+  done
+
 fi
 
 # Enable mcrypt - required by Magento

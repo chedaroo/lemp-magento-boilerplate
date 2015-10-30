@@ -49,7 +49,7 @@ in_array() {
 #####################################
 style_message() {
   # Ensure type is uppercase for case matching
-  local type=$( echo "$1" | tr -s  '[:lower:]'  '[:upper:]' )
+  local type=$( echo "$1" | tr  '[:lower:]'  '[:upper:]' )
   # Remove formatting from message
   local message="${FORMAT[nf]}$2${FORMAT[nf]}\n"
   # Style message bassed on type
