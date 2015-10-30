@@ -97,12 +97,13 @@ style_config() {
 style_line() {
   local params=("$@")
   local message=${params[-1]}
+  local style=""
   unset params[${#params[@]}-1]
 
   for param in "${params[@]}"; do
-    printf="${FORMAT[$param]}"
+    $style="$style$FORMAT[$param]"
   done
 
-  printf "$message${FORMAT[nf]}\n"
+  printf "${style}$message${FORMAT[nf]}\n"
 
 }
