@@ -16,12 +16,12 @@ if [ "$PWD" != "$PROJECT_ROOT/$ENVIRONMENT" ]; then
 fi
 
 # Color escape codes (for nicer output)
-source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
+source "$ENVIRONMENT_ROOT/bin/inc/helpers.sh"
 
 # Start here
-printf "####################################\n"
-printf "######### ${FORMAT[cyan]}Magento Workflow${FORMAT[nf]} #########\n"
-printf "####################################\n"
+printf "${FORMAT[red]}####################################${FORMAT[nf]}\n"
+printf "${FORMAT[lightred]}#########${FORMAT[white]}${FORMAT[bold]} Magento Workflow ${FORMAT[nf]}${FORMAT[lightred]}#########${FORMAT[nf]}\n"
+printf "${FORMAT[yellow]}####################################${FORMAT[nf]}\n"
 
 # /tmp has to be world-writable, but sometimes isn't by default.
 chmod 0777 /tmp
