@@ -2,8 +2,6 @@
 
 # Helper functions
 source "$ENVIRONMENT_ROOT/bin/inc/helpers.sh"
-# Color escape codes (for nicer output)
-source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
 source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
 
 # Environment
@@ -44,11 +42,11 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
     # Request database name
     printf "Please enter the name of the database you would like to use for this installation.\n"
     printf "This needs to be prefixed with 'magento_'.\n"
-    printf "[HINT] A good name would be something like 'magento_$ENVIRONMENT'\n"
+    style_message hint "A good name would be something like 'magento_$ENVIRONMENT'"
     read DB_NAME
     # Check database name doesn't already exist
     if in_array mysql_databases "${DB_NAME}"; then
-      printf "WARNING: The database 'magento_${DB_NAME}' already exists and so can't be used :(\n"
+      style_message warning "The database '${DB_NAME}' already exists and so can't be used :("
       unset DB_NAME
     # Check database name is valid (starts with 'magento_')
     elif [[ "${DB_NAME}" != magento_* ]]; then
@@ -68,6 +66,7 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
       #   1 Lower Alpha
       #   1 Upper Alpha
       # The password will be between 16 and 23 characters long
+      # http://stackoverflow.com/questions/26665389/random-password-generator-bash#answer-26665585
       choose() { echo ${1:RANDOM%${#1}:1} $RANDOM; }
       DB_PASS=$({
           choose '!@#$%^\&'
