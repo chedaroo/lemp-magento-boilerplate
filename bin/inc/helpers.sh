@@ -24,8 +24,11 @@ in_array() {
 
 # Message styler
 style_message() {
-  local type=${$1^^}
+  # Ensure type is uppercase for case matching
+  local type=$( echo "$1" | tr -s  '[:lower:]'  '[:upper:]' )
+  # Remove formatting from message
   local message="${FORMAT[nf]}$2\n"
+  # Style message bassed on type
   case $type in
     "HINT")
       printf "${FORMAT[lightcyan]}${FORMAT[bold]}[HINT] $message"
@@ -42,9 +45,13 @@ style_message() {
   esac
 }
 
-# Message styler
+
+# Config styler
 style_config() {
-  local label=${$1^}
+  # Capitialise the label
+  local label="$(tr '[:lower:]' '[:upper:]' <<< ${1:0:1})${1:1}"
+  # Format value
   local value="$2\n"
+  # Style message
   printf "${FORMAT[lightcyan]}$label:${FORMAT[nf]} $value"
 }
