@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 
-test_file() {
-  if [ "${1}" "${2}" ]; then
-    return 1
-  fi
-  return 0
-}
-
+# Helper functions
+source "$ENVIRONMENT_ROOT/bin/inc/helpers.sh"
 # Color escape codes (for nicer output)
 source "$ENVIRONMENT_ROOT/bin/inc/bash-colors.sh"
 source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
@@ -34,8 +29,10 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
   unset DB_USER
   unset DB_PASS
 
-  # Get array of existing MySQL Databases
-  mysql_databases=($(mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database))
+  # Get list of existing MySQL Databases
+  list_mysql_databases=$(mysql --user=root --password=$MYSQL_ROOT_PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
+  # Put list in array
+  read -a mysql_databases <<<$list_mysql_databases
 
   # Configuration for the installer
   SAMPLE_DATA="no"
@@ -43,40 +40,44 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
   MAGENTO_VERSION="magento-mirror-1.9.2.1"
 
   # Request / generate database configuration
-  while [[ ! ${DB_NAME} == magento_* ]]; do
+  while [[ "${DB_NAME}" != magento_* ]]; do
     # Request database name
-    printf "Please enter the name of the database you would like to use for this installation. This needs to be prefixed with 'magento'.\n"
+    printf "Please enter the name of the database you would like to use for this installation.\n"
+    printf "This needs to be prefixed with 'magento_'.\n"
     printf "[HINT] A good name would be something like 'magento_$ENVIRONMENT'\n"
     read DB_NAME
     # Check database name doesn't already exist
-    if in_array mysql_database "${DB_NAME}"; then
-      printf "WARNING: The database 'magento_${DB_NAME}' already exists and so can't be used :("
+    if in_array mysql_databases "${DB_NAME}"; then
+      printf "WARNING: The database 'magento_${DB_NAME}' already exists and so can't be used :(\n"
       unset DB_NAME
     # Check database name is valid (starts with 'magento_')
     elif [[ "${DB_NAME}" != magento_* ]]; then
+      printf "WARNING: The Database name must start with 'magento_')\n"
       unset DB_NAME
     # Check database name is Alpha Numeric and underscore only
-    elif [[ "${DB_NAME}" != "^[a-zA-Z0-9_]*$" ]]; then
+    elif [[ "${DB_NAME}" == "^[a-zA-Z0-9_]*$" ]]; then
+      printf "WARNING: The Database name must be Alpha Numeric, but with the exception of underscores\n"
       unset DB_NAME
-    # All is good, accept DB_NAME
+    # All is good, accepted DB_NAME
     else
       # Use DB_NAME as DB_USER
       DB_USER="${DB_NAME}"
-      # Generate password in buffer
+      # Generated password will contain at least:
+      #   1 Special
+      #   1 Number
+      #   1 Lower Alpha
+      #   1 Upper Alpha
+      # The password will be between 16 and 23 characters long
       choose() { echo ${1:RANDOM%${#1}:1} $RANDOM; }
-      {
+      DB_PASS=$({
           choose '!@#$%^\&'
           choose '0123456789'
           choose 'abcdefghijklmnopqrstuvwxyz'
           choose 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-          for i in $( seq 1 $(( 12 + RANDOM % 8 )) )
-          do
+          for i in $( seq 1 $(( 12 + RANDOM % 8 )) ); do
             choose '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
           done
-
-      } | sort -R | awk '{printf "%s",$1}'
-      # Assign password in buffer to DB_PASS
-      DB_PASS=""
+      } | sort -R | awk '{printf "%s",$1}')
     fi
   done
 
