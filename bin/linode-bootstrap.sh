@@ -39,9 +39,9 @@ if [ ! -e ~/MYSQL-SECURE.flag ]; then
   touch ~/MYSQL-SECURE.flag
 else
   style_message warn "MySQL has already been installed and secured."
-  read -s -p "Enter MYSQL root password: " MYSQL_ROOT_PASSWORD
+  read -s -p "Please enter MySQL root password: " MYSQL_ROOT_PASSWORD
   while ! mysql -u root -p$MYSQL_ROOT_PASSWORD  -e ";" ; do
-    read -p "Can't connect, please retry: " MYSQL_ROOT_PASSWORD
+    read -s -p "Unable to connect, check password is correct and MySQL is running: " MYSQL_ROOT_PASSWORD
   done
 
 fi
