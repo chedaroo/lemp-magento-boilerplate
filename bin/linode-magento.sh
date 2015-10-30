@@ -81,7 +81,7 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
   done
 
   # Magento database details
-  printf "${FORMAT[lightgreen]}Magento Database details...${FORMAT[nf]}\n"
+  style_line lightgreen "Magento Database details..."
   style_config "Database Name" $DB_NAME
   style_config "Database User" $DB_USER
   style_config "Database Password" $DB_PASS
