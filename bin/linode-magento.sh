@@ -46,15 +46,15 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
     read DB_NAME
     # Check database name doesn't already exist
     if in_array mysql_databases "${DB_NAME}"; then
-      style_message warning "The database '${DB_NAME}' already exists and so can't be used :("
+      style_message error "The database '${DB_NAME}' already exists and so can't be used :("
       unset DB_NAME
     # Check database name is valid (starts with 'magento_')
     elif [[ "${DB_NAME}" != magento_* ]]; then
-      printf "WARNING: The Database name must start with 'magento_')\n"
+      style_message error "The Database name must start with 'magento_')"
       unset DB_NAME
     # Check database name is Alpha Numeric and underscore only
     elif [[ "${DB_NAME}" == "^[a-zA-Z0-9_]*$" ]]; then
-      printf "WARNING: The Database name must be Alpha Numeric, but with the exception of underscores\n"
+      style_message error "The Database name must be Alpha Numeric, but with the exception of underscores"
       unset DB_NAME
     # All is good, accepted DB_NAME
     else
@@ -82,9 +82,9 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
 
   # Magento database details
   printf "${FORMAT[lightgreen]}Magento Database details...${FORMAT[nf]}\n"
-  printf "${FORMAT[cyan]}Database Name: ${FORMAT[nf]}$DB_NAME\n"
-  printf "${FORMAT[cyan]}Database User: ${FORMAT[nf]}$DB_USER\n"
-  printf "${FORMAT[cyan]}Database Password: ${FORMAT[nf]}$DB_PASS\n"
+  style_config "Database Name" $DB_NAME
+  style_config "Database User" $DB_USER
+  style_config "Database Password" $DB_PASS
 
   # Magento Base URL
   printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
