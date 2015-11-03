@@ -181,7 +181,7 @@ rm -rfv $MAGENTO_ROOT/var/cache/*
 # extensions instead, however kept and secured by renaming
 mv -v $MAGENTO_ROOT/downloader $MAGENTO_ROOT/.downloader
 # Access to .downloader is resricted nginx conf. Generate password here
-# to allow access magento connect downloader at http://magento.local/.downloader/
+# to allow access magento connect downloader at http://domain.com/.downloader/
 htpasswd -cb $MAGENTO_ROOT/var/.htpasswd "$DB_USER" "$DB_PASS"
 
 # Now after Magento has been installed, deploy all additional modules and run setup scripts
