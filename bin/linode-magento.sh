@@ -93,26 +93,18 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
 # fi
 
 # Redis Cache
-printf "${FORMAT[lightgreen]}Redis Backend Cache${FORMAT[nf]}\n"
-printf "Please select which Redis Database you would like to use for the Backend Cache.\n"
-printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'\n"
-printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one.\n"
-printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
-printf "Redis Backend Cache Database keyspace:\n"
-redis_select_db
-CACHE_DATABASE="${get_db}"
-CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
+if [ ! $BACKEND_CACHE_CONFIGURED ]; then
+  redis_select_db "Backend Cache"
+  CACHE_DATABASE="${get_db}"
+  CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
+fi
 
 # Redis Sessions
-printf "${FORMAT[lightgreen]}Redis Sessions${FORMAT[nf]}\n"
-printf "Please select which Redis Database you would like to use for the Sessions.\n"
-printf "To see a list of existing database in use start another SSH session and type 'redis-cli INFO keyspace.'\n"
-printf "You should choose a NEW keyspace NOT in this, unless of course you wish to overite an existing one.\n"
-printf "The keyspace should be in the form of an integer (ie - 0, 1, 2, 3, etc.)\n"
-printf "Redis Sessions Database keyspace:\n"
-redis_select_db
-SESSION_DB="${get_db}"
-SESSION_PERSISTENT="session-db$SESSION_DB"
+if [ ! $BACKEND_CACHE_CONFIGURED ]; then
+  redis_select_db "Session"
+  SESSION_DB="${get_db}"
+  SESSION_PERSISTENT="session-db$SESSION_DB"
+fi
 
 exit
 
