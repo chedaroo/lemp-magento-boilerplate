@@ -151,8 +151,9 @@ addCrontab "30 2 * * * /usr/bin/php $ENVIRONMENT_ROOT/var/cm_redis_tools/rediscl
 
 # Magento installation script
 unset MAGENTO_DOMAIN
+style_line cyan bold "Magento domain..."
 while [ ! $MAGENTO_DOMAIN ]; do
-  read -p "Please enter the domain to be used as the base url for the '$ENVIRONMENT' installation of Magento:" MAGENTO_DOMAIN
+  read -p "Please enter the domain to be used as the base url for the '$ENVIRONMENT' installation of Magento: " MAGENTO_DOMAIN
 done
 sudo -u $USERNAME -H PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT=$ENVIRONMENT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT ENVIRONMENT_ETC=$ENVIRONMENT_ETC MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD MAGENTO_DOMAIN=$MAGENTO_DOMAIN sh -c "bash $ENVIRONMENT_ROOT/bin/linode-magento.sh"
 
