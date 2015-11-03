@@ -16,7 +16,7 @@ redis_select_db () {
 
         while [[ ! ${get_db} =~ ^[0-9]+$ ]]; do
 
-                style_line "Please Redis keyspace to use:"
+                style_line "Keyspace to use for Redis $db_description:"
                 read get_db
                 printf "\n"
 

@@ -70,7 +70,7 @@ if [ ! MAGENTO_INSTALLED ]; then
       # http://stackoverflow.com/questions/26665389/random-password-generator-bash#answer-26665585
       choose() { echo ${1:RANDOM%${#1}:1} $RANDOM; }
       DB_PASS=$({
-          choose '!@#$%^\&'
+          choose '!@#$%^&'
           choose '0123456789'
           choose 'abcdefghijklmnopqrstuvwxyz'
           choose 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
