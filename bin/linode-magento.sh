@@ -132,7 +132,7 @@ modman link ./src
 modman deploy src --force
 
 # link n98-magerun Config overides
-sudo ln -fs $ENVIRONMENT_ROOT/conf/n98-magerun.yaml /etc/n98-magerun.yaml
+sudo ln -fsv $ENVIRONMENT_ROOT/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 
 # Create the database and the user
 mysql -u root -p$MYSQL_ROOT_PASSWORD -e "create database if not exists $DB_NAME; grant usage on *.* to $DB_USER@localhost identified by '$DB_PASS'; grant all privileges on $DB_NAME.* to $DB_USER@localhost;"
@@ -157,7 +157,7 @@ fi
 
 # Redis Backend Cache symlink to configuration xml
 if [ ! $BACKEND_CACHE_LINKED ]; then
-  ln -s $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
+  ln -sv $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
 fi
 
 # Redis Sessions create configuration xml
@@ -169,7 +169,7 @@ fi
 
 # Redis Sessions symlink to configuration xml
 if [ ! $SESSIONS_LINKED ]; then
-  ln -s $ENVIRONMENT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
+  ln -sv $ENVIRONMENT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
 fi
 
 # Enable Redis sessions (disabled by default)
@@ -182,18 +182,18 @@ if [ ! -d "$SHARED_MEDIA" ]; then
 fi
 
 # Create the Media folder Symlink
-sudo ln -fs $SHARED_MEDIA $MAGENTO_ROOT
+sudo ln -fsv $SHARED_MEDIA $MAGENTO_ROOT
 
 # Sort Permissions
 sudo chmod -R 0770 $SHARED_MEDIA
 sudo chown -R www-data $SHARED_MEDIA
 
 # Clear contents of old filesystem cache
-rm -rf $MAGENTO_ROOT/var/cache/*
+rm -rfv $MAGENTO_ROOT/var/cache/*
 
 # Downloader no longer required really as modman should be used to install new
 # extensions instead, however kept and secured by renaming
-mv $MAGENTO_ROOT/downloader $MAGENTO_ROOT/.downloader
+mv -v $MAGENTO_ROOT/downloader $MAGENTO_ROOT/.downloader
 # Access to .downloader is resricted nginx conf. Generate password here
 # to allow access magento connect downloader at http://magento.local/.downloader/
 htpasswd -cb $MAGENTO_ROOT/var/.htpasswd "$DB_USER" "$DB_PASS"
@@ -217,4 +217,4 @@ if [ ! -f "$ENVIRONMENT_ETC/local.xml" ]; then
   fi
 fi
 # Symlink version controlled local.xml to Magento root
-ln -fs $ENVIRONMENT_ETC/local.xml $MAGENTO_ETC/local.xml
+ln -fsv $ENVIRONMENT_ETC/local.xml $MAGENTO_ETC/local.xml
