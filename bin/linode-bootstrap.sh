@@ -168,8 +168,8 @@ if [ -e "/etc/nginx/sites-enabled/default" ]; then
 fi
 
 # Create Nginx conf file for Environment if it doesn't exist
-if [ ! -e "$ENVIRONMENT_ETC/$ENVIRONMENT.conf" ]; then
-  sed -e s/"{{environment}}"/"$ENVIRONMENT"/g -e s/"{{domain}}"/"$MAGENTO_DOMAIN"/g $ENVIRONMENT_ROOT/conf/nginx-template.conf > $ENVIRONMENT_ETC/$ENVIRONMENT.conf
+if [ ! -e "$ENVIRONMENT_ROOT/conf/sites-available/$ENVIRONMENT.conf" ]; then
+  sed -e s/"{{environment}}"/"$ENVIRONMENT"/g -e s/"{{domain}}"/"$MAGENTO_DOMAIN"/g $ENVIRONMENT_ROOT/conf/sites-available/nginx-template.conf > $ENVIRONMENT_ROOT/conf/sites-available/$ENVIRONMENT.conf
 fi
 
 # Symlink Nginx conf for Environment to sites-available
