@@ -57,7 +57,7 @@ fi
 
 # Redis Backend Cache symlink to configuration xml
 if [ ! -e "$MAGENTO_ETC/Mage_Cache_Backend_Redis.xml" ]; then
-  ln -s $PROJECT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
+  ln -sv $PROJECT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
 fi
 
 # Redis Sessions create configuration xml
@@ -69,7 +69,7 @@ fi
 
 # Redis Sessions symlink to configuration xml
 if [ ! -e "$MAGENTO_ETC/Cm_RedisSession.xml" ]; then
-  ln -s $PROJECT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
+  ln -sv $PROJECT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
 fi
 
 # Enable Redis sessions (disabled by default)
@@ -96,7 +96,7 @@ if [ ! -f "$PROJECT_ETC/local.xml" ]; then
 	cp $MAGENTO_ETC/local.xml $PROJECT_ETC/local.xml
 fi
 # Symlink version controlled local.xml to Magento root
-ln -fs $PROJECT_ETC/local.xml $MAGENTO_ETC/local.xml
+ln -fsv $PROJECT_ETC/local.xml $MAGENTO_ETC/local.xml
 
 # Some devbox specific Magento settings
 n98-magerun.phar config:set dev/log/active 1
