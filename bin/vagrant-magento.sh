@@ -17,16 +17,16 @@ CACHE_PERSISTENT="cache-db$CACHE_DATABASE"
 SESSION_DB="1"
 SESSION_PERSISTENT="session-db$SESSION_DB"
 
-# Project
-PROJECT_ROOT="/vagrant"
-PROJECT_ETC="$PROJECT_ROOT/etc/vagrant"
+# Environment
+ENVIRONMENT_ROOT="/vagrant"
+ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/vagrant"
 # Magento
 MAGENTO_ROOT="/home/vagrant/www"
 MAGENTO_ETC="$MAGENTO_ROOT/app/etc"
 
 # Install dependencies from composer.
 # Extensions from Composer will be deployed after Magento has been installed
-cd $PROJECT_ROOT
+cd $ENVIRONMENT_ROOT
 sudo composer install --prefer-dist --no-interaction --no-scripts
 cd ~
 
@@ -35,7 +35,7 @@ modman link ./src
 modman deploy src --force
 
 # link n98-magerun Config overides
-sudo ln -fs $PROJECT_ROOT/conf/n98-magerun.yaml /etc/n98-magerun.yaml
+sudo ln -fs $ENVIRONMENT_ROOT/conf/n98-magerun.yaml /etc/n98-magerun.yaml
 
 # Use n98-magerun to set up Magento (database and local.xml)
 # use --noDownload if Magento core is deployed with modman or composer. Test if there already is a configured Magento installation and if so skip installation
@@ -43,33 +43,33 @@ if [ ! -e "$MAGENTO_ETC/local.xml" ]; then
   n98-magerun.phar install --dbHost="$DB_HOST" --dbUser="$DB_USER" --dbPass="$DB_PASS" --dbName="$DB_NAME" --installSampleData="$SAMPLE_DATA" --useDefaultConfigParams=yes --magentoVersionByName="$MAGENTO_VERSION" --installationFolder="www" --baseUrl="http://magento.local/"
 fi
 
-# Redis configuration progect directory
-if [ ! -d "$PROJECT_ETC" ]; then
-  mkdir $PROJECT_ETC
+# Redis configuration environment directory
+if [ ! -d "$ENVIRONMENT_ETC" ]; then
+  mkdir $ENVIRONMENT_ETC
 fi
 
 # Redis Backend Cache create configuration xml
-if [ ! -e "$PROJECT_ETC/Mage_Cache_Backend_Redis.xml" ]; then
+if [ ! -e "$ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml" ]; then
   # Creates a new config file by copying the source xml template but
   # also replaces the {{XXXXX}} placeholders with real values
-  sed -e s/"{{PERSISTENT}}"/"$CACHE_PERSISTENT"/g -e s/"{{DATABASE}}"/"$CACHE_DATABASE"/g $PROJECT_ROOT/conf/Mage_Cache_Backend_Redis.xml > $PROJECT_ETC/Mage_Cache_Backend_Redis.xml
+  sed -e s/"{{PERSISTENT}}"/"$CACHE_PERSISTENT"/g -e s/"{{DATABASE}}"/"$CACHE_DATABASE"/g $ENVIRONMENT_ROOT/conf/Mage_Cache_Backend_Redis.xml > $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml
 fi
 
 # Redis Backend Cache symlink to configuration xml
 if [ ! -e "$MAGENTO_ETC/Mage_Cache_Backend_Redis.xml" ]; then
-  ln -sv $PROJECT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
+  ln -sv $ENVIRONMENT_ETC/Mage_Cache_Backend_Redis.xml $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml
 fi
 
 # Redis Sessions create configuration xml
-if [ ! -e "$PROJECT_ETC/Cm_RedisSession.xml" ]; then
+if [ ! -e "$ENVIRONMENT_ETC/Cm_RedisSession.xml" ]; then
   # Creates a new config file by copying the source xml template but
   # also replaces the {{XXXXX}} placeholders with real values
-  sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DB}}"/"$SESSION_DB"/g $PROJECT_ROOT/conf/Cm_RedisSession.xml > $PROJECT_ETC/Cm_RedisSession.xml
+  sed -e s/"{{PERSISTENT}}"/"$SESSION_PERSISTENT"/g -e s/"{{DB}}"/"$SESSION_DB"/g $ENVIRONMENT_ROOT/conf/Cm_RedisSession.xml > $ENVIRONMENT_ETC/Cm_RedisSession.xml
 fi
 
 # Redis Sessions symlink to configuration xml
 if [ ! -e "$MAGENTO_ETC/Cm_RedisSession.xml" ]; then
-  ln -sv $PROJECT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
+  ln -sv $ENVIRONMENT_ETC/Cm_RedisSession.xml $MAGENTO_ETC/Cm_RedisSession.xml
 fi
 
 # Enable Redis sessions (disabled by default)
@@ -92,11 +92,11 @@ n98-magerun.phar dev:symlinks --on --global
 
 # Copy local.xml generated during installation to shared vagrant drive
 # if it doesn't exist there yet so it can be placed under version control
-if [ ! -f "$PROJECT_ETC/local.xml" ]; then
-	cp $MAGENTO_ETC/local.xml $PROJECT_ETC/local.xml
+if [ ! -f "$ENVIRONMENT_ETC/local.xml" ]; then
+	cp $MAGENTO_ETC/local.xml $ENVIRONMENT_ETC/local.xml
 fi
 # Symlink version controlled local.xml to Magento root
-ln -fsv $PROJECT_ETC/local.xml $MAGENTO_ETC/local.xml
+ln -fsv $ENVIRONMENT_ETC/local.xml $MAGENTO_ETC/local.xml
 
 # Some devbox specific Magento settings
 n98-magerun.phar config:set dev/log/active 1
