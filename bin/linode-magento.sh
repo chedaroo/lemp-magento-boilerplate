@@ -36,6 +36,7 @@ if [ ! $MAGENTO_INSTALLED ]; then
   MAGENTO_VERSION="magento-mirror-1.9.2.1"
 
   # Request / generate database configuration
+  style_line cyan bold "Magento database configuration..."
   style_line "Please enter the name of the database you would like to use for this installation."
   style_line "This needs to be prefixed with 'magento_'"
   style_message hint "A good name would be something like 'magento_$ENVIRONMENT'"
@@ -94,8 +95,8 @@ if [ ! $BACKEND_CACHE_CONFIGURED ]; then
 fi
 
 # Redis Sessions
-if [ ! $BACKEND_CACHE_CONFIGURED ]; then
-  redis_select_db "Session"
+if [ ! $SESSIONS_CONFIGURED ]; then
+  redis_select_db "Sessions"
   SESSION_DB="${get_db}"
   SESSION_PERSISTENT="session-db$SESSION_DB"
 fi
@@ -163,7 +164,7 @@ n98-magerun.phar dev:module:enable Cm_RedisSession
 # Move generated media dir to shared loaction if doesn't already exist
 if [ ! -d "$SHARED_MEDIA" ]; then
   sudo mkdir -p $SHARED_MEDIA
-	sudo mv $MAGENTO_ROOT/media/* $SHARED_MEDIA
+	sudo mv $MAGENTO_ROOT/media $SHARED_MEDIA
 fi
 
 # Create the Media folder Symlink

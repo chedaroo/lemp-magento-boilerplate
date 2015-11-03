@@ -9,7 +9,7 @@ redis_select_db () {
         declare -a existing_dbs
 
         style_line cyan bold "Redis $db_description"
-        style_line "Please enter the keyspace of the Redis Database you wish to use for the $db_description's below."
+        style_line "Please enter the keyspace of the Redis Database you wish to use for the $db_description below."
         style_line "The keyspace should be in the form of an integer, such as '1'."
         style_message hint "It is advisable not to use an already active keyspace as this may cause abnormal evections."
         style_message hint "You can type 'list' to see currently active database"

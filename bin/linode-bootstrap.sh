@@ -38,12 +38,13 @@ apt-get update > /dev/null
 source "$ENVIRONMENT_ROOT/bin/inc/common-install-packages.sh"
 
 # Secure MySQL
+style_line cyan bold "Securing MySQL..."
 if [ ! -e ~/MYSQL-SECURE.flag ]; then
   source "$ENVIRONMENT_ROOT/bin/inc/linode-mysql.sh"
   touch ~/MYSQL-SECURE.flag
 else
-  style_message warn "MySQL has already been installed and secured."
-  read -s -p "Please enter MySQL root password: " MYSQL_ROOT_PASSWORD
+  style_message warn "MySQL has already been installed and secured on this server."
+  read -s -p "Please enter the MySQL root password now: " MYSQL_ROOT_PASSWORD
   echo ""
   while ! mysql -u root -p$MYSQL_ROOT_PASSWORD  -e ";" ; do
     read -s -p "Unable to connect, check password is correct and MySQL is running: " MYSQL_ROOT_PASSWORD
@@ -150,7 +151,7 @@ addCrontab "30 2 * * * /usr/bin/php $ENVIRONMENT_ROOT/var/cm_redis_tools/rediscl
 
 # Magento installation script
 unset MAGENTO_DOMAIN
-while [ ! MAGENTO_DOMAIN ]; do
+while [ ! $MAGENTO_DOMAIN ]; do
   read -p "Please enter the domain to be used as the base url for Magento:" MAGENTO_DOMAIN
 done
 sudo -u $USERNAME -H ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD MAGENTO_DOMAIN=$MAGENTO_DOMAIN sh -c "bash $ENVIRONMENT_ROOT/bin/linode-magento.sh"
@@ -167,7 +168,7 @@ if [ -e "/etc/nginx/sites-enabled/default" ]; then
 fi
 
 # Create Nginx conf file for Environment if it doesn't exist
-if [ ! -e "$ENVIRONMENT_ETC/$ENVIRONMENT.conf" ]
+if [ ! -e "$ENVIRONMENT_ETC/$ENVIRONMENT.conf" ]; then
   sed -e s/"{{environment}}"/"$ENVIRONMENT"/g -e s/"{{domain}}"/"$MAGENTO_DOMAIN"/g $ENVIRONMENT_ROOT/conf/nginx-template.conf > $ENVIRONMENT_ETC/$ENVIRONMENT.conf
 fi
 
