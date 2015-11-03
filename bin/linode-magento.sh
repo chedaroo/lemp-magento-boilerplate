@@ -91,7 +91,6 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
   printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
   read MAGENTO_BASE_URL
 # fi
-exit
 
 # Redis Cache
 printf "${FORMAT[lightgreen]}Redis Backend Cache${FORMAT[nf]}\n"
@@ -114,6 +113,8 @@ printf "Redis Sessions Database keyspace:\n"
 redis_select_db
 SESSION_DB="${get_db}"
 SESSION_PERSISTENT="session-db$SESSION_DB"
+
+exit
 
 # Go to deployment root
 cd $ENVIRONMENT_ROOT

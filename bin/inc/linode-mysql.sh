@@ -1,6 +1,6 @@
 aptitude -y install expect
 
-echo "Please enter a root MySQL password (remember to put this in Loki!)"
+style_line "Please enter a root MySQL password (remember to put this in Loki!)"
 read MYSQL_ROOT_PASSWORD
 
 SECURE_MYSQL=$(expect -c "
