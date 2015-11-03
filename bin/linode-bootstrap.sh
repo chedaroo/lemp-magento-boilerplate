@@ -160,12 +160,12 @@ if [ -e "/etc/nginx/sites-enabled/default" ]; then
   sudo rm /etc/nginx/sites-enabled/default
 fi
 # Symlink all Nginx website conf files
-ln -fs $ENVIRONMENT_ROOT/conf/sites-enabled/* /etc/nginx/sites-enabled/
+ln -fsv $ENVIRONMENT_ROOT/conf/sites-enabled/* /etc/nginx/sites-enabled/
 # Remove link for local Vagrant dev env Nginx conf file
 rm /etc/nginx/sites-enabled/local-vagrant.conf
 # Symlink environment
 if [ ! -e "/etc/nginx/nginx.conf" ] ; then
-  ln -fs $ENVIRONMENT_ROOT/conf/nginx.conf /etc/nginx/nginx.conf
+  ln -fsv $ENVIRONMENT_ROOT/conf/nginx.conf /etc/nginx/nginx.conf
 fi
 # Restart Nginx
 service nginx restart
