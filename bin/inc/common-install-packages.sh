@@ -15,7 +15,7 @@ apt-get -q -y install mysql-server mysql-client  > /dev/null
 
 # Install additional required packages
 style_line cyan bold "Installing PHP and additional packages..."
-apt-get install -y vim git curl > /dev/null
+apt-get install -y vim git curl zip > /dev/null
 apt-get install -y redis-server mini-httpd php5-dev php5-cli php5-mysql php5-mcrypt php5-gd php5-curl php5-tidy php-pear php-apc  > /dev/null
 
 # Install Redis server for Backend and Session caching
