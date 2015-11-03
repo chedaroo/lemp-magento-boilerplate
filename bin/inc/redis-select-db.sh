@@ -13,10 +13,10 @@ redis_select_db () {
         style_line "The keyspace should be in the form of an integer, such as '1'."
         style_message hint "It is advisable not to use an already active keyspace as this may cause abnormal evections."
         style_message hint "You can type 'list' to see currently active database"
-        style_line "Redis keyspace to use:"
 
         while [[ ! ${get_db} =~ ^[0-9]+$ ]]; do
 
+                style_line "Please Redis keyspace to use:"
                 read get_db
                 printf "\n"
 
@@ -36,7 +36,7 @@ redis_select_db () {
                         read db_confirm
 
                         if [ "$db_confirm" != "YES" ]; then
-                                printf "Aborted\n"
+                                style_line yellow "Aborted"
                                 unset get_db
                         else
                                 printf "\n"

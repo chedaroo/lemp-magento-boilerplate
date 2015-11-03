@@ -21,8 +21,8 @@ BACKEND_CACHE_LINKED=$(test_file -e $MAGENTO_ETC/Mage_Cache_Backend_Redis.xml)
 SESSIONS_CONFIGURED=$(test_file -e $ENVIRONMENT_ETC/Cm_RedisSession.xml)
 SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
 
-# if [ ! MAGENTO_INSTALLED ]; then
-
+# Validatimg MySQL database configuration
+if [ ! MAGENTO_INSTALLED ]; then
   unset DB_NAME
   unset DB_USER
   unset DB_PASS
@@ -90,7 +90,7 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
   # Magento Base URL
   printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
   read MAGENTO_BASE_URL
-# fi
+fi
 
 # Redis Cache
 if [ ! $BACKEND_CACHE_CONFIGURED ]; then
@@ -105,8 +105,6 @@ if [ ! $BACKEND_CACHE_CONFIGURED ]; then
   SESSION_DB="${get_db}"
   SESSION_PERSISTENT="session-db$SESSION_DB"
 fi
-
-exit
 
 # Go to deployment root
 cd $ENVIRONMENT_ROOT
