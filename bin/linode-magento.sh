@@ -38,11 +38,12 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
   MAGENTO_VERSION="magento-mirror-1.9.2.1"
 
   # Request / generate database configuration
+  style_line "Please enter the name of the database you would like to use for this installation."
+  style_line "This needs to be prefixed with 'magento_'"
+  style_message hint "A good name would be something like 'magento_$ENVIRONMENT'"
+
   while [[ "${DB_NAME}" != magento_* ]]; do
     # Request database name
-    printf "Please enter the name of the database you would like to use for this installation.\n"
-    printf "This needs to be prefixed with 'magento_'.\n"
-    style_message hint "A good name would be something like 'magento_$ENVIRONMENT'"
     read DB_NAME
     # Check database name doesn't already exist
     if in_array mysql_databases "${DB_NAME}"; then
@@ -50,11 +51,11 @@ SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
       unset DB_NAME
     # Check database name is valid (starts with 'magento_')
     elif [[ "${DB_NAME}" != magento_* ]]; then
-      style_message error "The Database name must start with 'magento_')"
+      style_message error "The database name must start with 'magento_'"
       unset DB_NAME
     # Check database name is Alpha Numeric and underscore only
     elif [[ "${DB_NAME}" == "^[a-zA-Z0-9_]*$" ]]; then
-      style_message error "The Database name must be Alpha Numeric, but with the exception of underscores"
+      style_message error "The database name must be Alpha Numeric, with the exception of '_'"
       unset DB_NAME
     # All is good, accepted DB_NAME
     else
