@@ -7,8 +7,10 @@ clear
 USERNAME="beanstalk"
 GROUP="www-data"
 PROJECT_ROOT="/var/webroot"
+# Environment
 ENVIRONMENT=${PWD##*/}
 ENVIRONMENT_ROOT="$PROJECT_ROOT/$ENVIRONMENT"
+ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/$ENVIRONMENT"
 
 # Test whether script is being run from ENVIRONMENT_ROOT
 if [ "$PWD" != "$PROJECT_ROOT/$ENVIRONMENT" ]; then
@@ -147,7 +149,11 @@ addCrontab() {
 addCrontab "30 2 * * * /usr/bin/php $ENVIRONMENT_ROOT/var/cm_redis_tools/rediscli.php -s 127.0.0.1 -p 6379 -d 0,1"
 
 # Magento installation script
-sudo -u $USERNAME -H ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD sh -c "bash $ENVIRONMENT_ROOT/bin/linode-magento.sh"
+unset MAGENTO_DOMAIN
+while [ ! MAGENTO_DOMAIN ]; do
+  read -p "Please enter the domain to be used as the base url for Magento:" MAGENTO_DOMAIN
+done
+sudo -u $USERNAME -H ENVIRONMENT=$ENVIRONMENT PROJECT_ROOT=$PROJECT_ROOT ENVIRONMENT_ROOT=$ENVIRONMENT_ROOT MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD MAGENTO_DOMAIN=$MAGENTO_DOMAIN sh -c "bash $ENVIRONMENT_ROOT/bin/linode-magento.sh"
 
 # MySQL configuration, cannot be linked because MySQL refuses to load world-writable configuration
 cp -f $ENVIRONMENT_ROOT/conf/my.cnf /etc/mysql/my.cnf
@@ -159,10 +165,17 @@ mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%
 if [ -e "/etc/nginx/sites-enabled/default" ]; then
   sudo rm /etc/nginx/sites-enabled/default
 fi
-# Symlink all Nginx website conf files
-ln -fsv $ENVIRONMENT_ROOT/conf/sites-enabled/* /etc/nginx/sites-enabled/
-# Remove link for local Vagrant dev env Nginx conf file
-rm /etc/nginx/sites-enabled/local-vagrant.conf
+
+# Create Nginx conf file for Environment if it doesn't exist
+if [ ! -e "$ENVIRONMENT_ETC/$ENVIRONMENT.conf" ]
+  sed -e s/"{{environment}}"/"$ENVIRONMENT"/g -e s/"{{domain}}"/"$MAGENTO_DOMAIN"/g $ENVIRONMENT_ROOT/conf/nginx-template.conf > $ENVIRONMENT_ETC/$ENVIRONMENT.conf
+fi
+
+# Symlink Nginx conf for Environment to sites-available
+ln -fsv $ENVIRONMENT_ROOT/conf/sites-available/$ENVIRONMENT.conf /etc/nginx/sites-available/
+# then also to sites-enabled
+ln -fsv /etc/nginx/sites-available/$ENVIRONMENT.conf /etc/nginx/sites-enabled/
+
 # Symlink environment
 if [ ! -e "/etc/nginx/nginx.conf" ] ; then
   ln -fsv $ENVIRONMENT_ROOT/conf/nginx.conf /etc/nginx/nginx.conf

@@ -4,12 +4,10 @@
 source "$ENVIRONMENT_ROOT/bin/inc/helpers.sh"
 source "$ENVIRONMENT_ROOT/bin/inc/redis-select-db.sh"
 
-# Environment
-ENVIRONMENT_ETC="$ENVIRONMENT_ROOT/etc/$ENVIRONMENT"
-
 # Magento
 MAGENTO_ROOT="$ENVIRONMENT_ROOT/www"
 MAGENTO_ETC="$MAGENTO_ROOT/app/etc"
+MAGENTO_BASE_URL="http://$MAGENTO_DOMAIN/"
 
 # Shared with other environments
 SHARED_MEDIA="$PROJECT_ROOT/common/media"
@@ -86,10 +84,6 @@ if [ ! $MAGENTO_INSTALLED ]; then
   style_config "Database Name" $DB_NAME
   style_config "Database User" $DB_USER
   style_config "Database Password" $DB_PASS
-
-  # Magento Base URL
-  printf "Please enter the Magento Base URL inc protocol and trailing slash (ie - http://www.domain.com/):\n"
-  read MAGENTO_BASE_URL
 fi
 
 # Redis Cache
