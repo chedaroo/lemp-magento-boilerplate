@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # /!\ The IP should be in the same range as the VirtualBox Host-Only Network adapter
   #     => see ipconfig in Windows
   #
-  config.vm.network :private_network, ip: "192.168.56.102"
+  config.vm.network :private_network, ip: "192.168.56.101"
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
