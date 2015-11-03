@@ -22,7 +22,7 @@ SESSIONS_CONFIGURED=$(test_file -e $ENVIRONMENT_ETC/Cm_RedisSession.xml)
 SESSIONS_LINKED=$(test_file -e $MAGENTO_ETC/Cm_RedisSession.xml)
 
 # Validatimg MySQL database configuration
-if [ ! MAGENTO_INSTALLED ]; then
+if [ ! $MAGENTO_INSTALLED ]; then
   unset DB_NAME
   unset DB_USER
   unset DB_PASS
