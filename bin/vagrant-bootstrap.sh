@@ -145,7 +145,9 @@ mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; FLUSH PRIVILEGES;"
 if [ -e "/etc/nginx/sites-enabled/default" ]; then
   sudo rm /etc/nginx/sites-enabled/default
 fi
-ln -fsv $ENVIRONMENT_ROOT/conf/sites-enabled/local-vagrant.conf /etc/nginx/sites-enabled/local-vagrant.conf
+# Link conf file
+ln -fsv $ENVIRONMENT_ROOT/conf/sites-available/local-vagrant.conf /etc/nginx/sites-available/local-vagrant.conf
+ln -fsv /etc/nginx/sites-available/local-vagrant.conf /etc/nginx/sites-enabled/local-vagrant.conf
 
 # Install PHPMyAdmin
 style_line cyan bold "Installing PHPMyAdmin..."
